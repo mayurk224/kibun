@@ -9,16 +9,43 @@ export default function FaceExpression() {
   const [expression, setExpression] = useState("Detecting...");
 
   useEffect(() => {
+    let mounted = true;
+    let animationFrameId;
+
+    const loop = () => {
+      if (!mounted) return;
+      detect({ landmarkerRef, videoRef, setExpression });
+      animationFrameId = requestAnimationFrame(loop);
+    };
+
     const startCamera = async () => {
       try {
         await init({ landmarkerRef, videoRef, streamRef });
+        if (!mounted) {
+          // Cleanup if unmounted during init
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach((track) => {
+              track.stop();
+            });
+            streamRef.current = null;
+          }
+          if (landmarkerRef.current) {
+            landmarkerRef.current.close();
+            landmarkerRef.current = null;
+          }
+          return;
+        }
         setExpression("Camera Ready");
+        loop();
       } catch (err) {
+        if (!mounted) return;
         console.error("Error initializing face detection:", err);
         setExpression(`Error: ${err.message || "Camera init failed"}`);
         // Cleanup on failure
         if (streamRef.current) {
-          streamRef.current.getTracks().forEach((track) => track.stop());
+          streamRef.current.getTracks().forEach((track) => {
+            track.stop();
+          });
           streamRef.current = null;
         }
         if (landmarkerRef.current) {
@@ -31,6 +58,10 @@ export default function FaceExpression() {
     startCamera();
 
     return () => {
+      mounted = false;
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       if (landmarkerRef.current) {
         landmarkerRef.current.close();
       }
@@ -38,7 +69,9 @@ export default function FaceExpression() {
       if (videoRef.current?.srcObject) {
         const stream = videoRef.current.srcObject;
         const tracks = stream.getTracks();
-        tracks.forEach((track) => track.stop());
+        tracks.forEach((track) => {
+          track.stop();
+        });
       }
     };
   }, []);
@@ -51,13 +84,6 @@ export default function FaceExpression() {
         playsInline
       />
       <h2>{expression}</h2>
-      <button
-        onClick={() => {
-          detect({ landmarkerRef, videoRef, setExpression });
-        }}
-      >
-        Detect expression
-      </button>
     </div>
   );
 }
