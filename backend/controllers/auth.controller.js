@@ -76,6 +76,19 @@ async function signUpController(req, res) {
       },
     });
   } catch (error) {
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      return res.status(409).json({
+        success: false,
+        message: `${field} already exist`,
+      });
+    }
+    if (error.message === "username/email already exists") {
+      return res.status(409).json({
+        success: false,
+        message: error.message,
+      });
+    }
     console.error(error);
     return res.status(500).json({
       success: false,

@@ -3,13 +3,14 @@ require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 
 const URI = process.env.MONGO_URI;
 
-function connectToDb() {
-  try {
-    mongoose.connect(URI);
-    console.log("Connected to db");
-  } catch (error) {
-    console.error(error);
-  }
+if (!URI) {
+  console.error("Error: MONGO_URI environment variable is missing.");
+  process.exit(1);
 }
+
+const connectToDb = async () => {
+  await mongoose.connect(URI);
+  console.log("Connected to db");
+};
 
 module.exports = connectToDb;

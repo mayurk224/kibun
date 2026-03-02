@@ -19,6 +19,8 @@ const verifyEmailSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+verifyEmailSchema.index({ expiredAt: 1 }, { expireAfterSeconds: 0 });
+
 const verifyEmailModel = mongoose.model("verifyEmail", verifyEmailSchema);
 
 module.exports = verifyEmailModel;
