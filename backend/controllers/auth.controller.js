@@ -1,6 +1,9 @@
 const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
-const crypto = require("crypto")
+const crypto = require("crypto");
+const verifyEmailModel = require("../models/verifyEmail.model");
+const sendEmail = require("../services/email.service");
+const { welcomeTemplate } = require("../utils/emailTemplate");
 
 async function signUpController(req, res) {
   try {
@@ -44,12 +47,30 @@ async function signUpController(req, res) {
 
     const verifyToken = crypto.randomBytes(32).toString("hex");
 
-    const verifyUrl = `${FRONTEND_URL}/api/auth/verify-email/${verifyToken}`;
+    const hashVerifyToken = crypto
+      .createHash("sha256")
+      .update(verifyToken)
+      .digest("hex");
+
+    await verifyEmailModel.create({
+      userId: user._id,
+      token: hashVerifyToken,
+      expiredAt: Date.now() + 24 * 60 * 60 * 1000,
+    });
+
+    const verifyUrl = `${process.env.FRONTEND_URL}/api/auth/verify-email/${verifyToken}`;
+
+    await sendEmail({
+      to: email,
+      subject: "Welcome to Kibun",
+      html: welcomeTemplate(user.username, verifyUrl),
+    });
 
     return res.status(201).json({
       success: true,
-      message: "sign up successfully",
-      user:{
+      message:
+        "sign up successfully. Please Check your email to verify account",
+      user: {
         username,
         email,
       },
