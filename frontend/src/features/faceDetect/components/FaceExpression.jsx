@@ -9,7 +9,26 @@ export default function FaceExpression() {
   const [expression, setExpression] = useState("Detecting...");
 
   useEffect(() => {
-    init({ landmarkerRef, videoRef, streamRef });
+    const startCamera = async () => {
+      try {
+        await init({ landmarkerRef, videoRef, streamRef });
+        setExpression("Camera Ready");
+      } catch (err) {
+        console.error("Error initializing face detection:", err);
+        setExpression(`Error: ${err.message || "Camera init failed"}`);
+        // Cleanup on failure
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach((track) => track.stop());
+          streamRef.current = null;
+        }
+        if (landmarkerRef.current) {
+          landmarkerRef.current.close();
+          landmarkerRef.current = null;
+        }
+      }
+    };
+
+    startCamera();
 
     return () => {
       if (landmarkerRef.current) {
@@ -17,7 +36,9 @@ export default function FaceExpression() {
       }
 
       if (videoRef.current?.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach((track) => track.stop());
+        const stream = videoRef.current.srcObject;
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
       }
     };
   }, []);
