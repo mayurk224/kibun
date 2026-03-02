@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import FaceExpression from "./features/faceDetect/components/FaceExpression";
 
 const App = () => {
   return (
-    <div>App</div>
-  )
-}
+    <div>
+      <FaceExpression />
+    </div>
+  );
+};
 
-export default App
+export default App;
