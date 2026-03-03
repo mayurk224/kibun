@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const verifyEmailModel = require("../models/verifyEmail.model");
 const sendEmail = require("../services/email.service");
+const jwt = require("jsonwebtoken");
 const {
   welcomeTemplate,
   resendVerifyEmailTemplate,
@@ -218,8 +219,77 @@ async function resendVerifyEmailController(req, res) {
   }
 }
 
+async function signInController(req, res) {
+  try {
+    const { identifier, password } = req.body;
+
+    if (!identifier || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "all fields are required",
+      });
+    }
+
+    const userExist = await userModel
+      .findOne({ $or: [{ email: identifier }, { username: identifier }] })
+      .select("+password")
+      .lean();
+
+    if (!userExist) {
+      return res.status(404).json({
+        success: false,
+        message: "user not found",
+      });
+    }
+
+    if (!userExist.userVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "please verify your email",
+      });
+    }
+
+    const checkPassword = await bcrypt.compare(password, userExist.password);
+
+    if (!checkPassword) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid Credentials",
+      });
+    }
+
+    const token = jwt.sign({ userId: userExist._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "sign in successfully",
+      user: {
+        _id: userExist._id,
+        username: userExist.username,
+        email: userExist.email,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
 module.exports = {
   signUpController,
   verifyEmailController,
   resendVerifyEmailController,
+  signInController,
 };

@@ -3,6 +3,7 @@ const {
   signUpController,
   verifyEmailController,
   resendVerifyEmailController,
+  signInController,
 } = require("../controllers/auth.controller");
 
 const authRoute = express.Router();
@@ -10,5 +11,6 @@ const authRoute = express.Router();
 authRoute.post("/sign-up", signUpController);
 authRoute.post("/verify-email", verifyEmailController);
 authRoute.post("/resend-verify-email", resendVerifyEmailController);
+authRoute.post("/sign-in", signInController);
 
 module.exports = authRoute;
