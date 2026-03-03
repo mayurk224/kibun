@@ -97,6 +97,58 @@ async function signUpController(req, res) {
   }
 }
 
+async function verifyEmailController(req, res) {
+  try {
+    const { token } = req.body || {};
+    if (!token || typeof token !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Token is required and must be a string",
+      });
+    }
+
+    const hashToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const verifyTokenRecord = await verifyEmailModel.findOne({
+      token: hashToken,
+      expiredAt: { $gt: Date.now() },
+    });
+
+    if (!verifyTokenRecord) {
+      return res.status(400).json({
+        success: false,
+        message: "Token is invalid or has expired",
+      });
+    }
+
+    const user = await userModel.findById(verifyTokenRecord.userId).lean();
+    if (!user) {
+      await verifyEmailModel.deleteOne({ _id: verifyTokenRecord._id });
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    await Promise.all([
+      userModel.updateOne({ _id: user._id }, { userVerified: true }),
+      verifyEmailModel.deleteOne({ _id: verifyTokenRecord._id }),
+    ]);
+
+    return res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+    });
+  } catch (error) {
+    console.error("verifyEmailController error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
 module.exports = {
   signUpController,
+  verifyEmailController,
 };
