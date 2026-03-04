@@ -9,6 +9,7 @@ const {
   resendVerifyEmailTemplate,
 } = require("../utils/emailTemplate");
 const blacklistModel = require("../models/blacklist.model");
+const redis = require("../config/cache");
 
 async function signUpController(req, res) {
   try {
@@ -299,15 +300,17 @@ async function logoutController(req, res) {
       });
     }
 
-    await blacklistModel.create({
-      token: token,
-    });
+    // await blacklistModel.create({
+    //   token: token,
+    // });
 
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
+
+    redis.set(token, Date.now().toString());
 
     return res.status(200).json({
       success: true,
@@ -322,10 +325,40 @@ async function logoutController(req, res) {
   }
 }
 
+async function getMeController(req, res) {
+  try {
+    const user = await userModel.findById(req.user.userId).lean();
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        userVerified: user.userVerified,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+}
+
 module.exports = {
   signUpController,
   verifyEmailController,
   resendVerifyEmailController,
   signInController,
   logoutController,
+  getMeController,
 };

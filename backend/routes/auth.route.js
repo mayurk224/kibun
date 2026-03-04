@@ -5,7 +5,9 @@ const {
   resendVerifyEmailController,
   signInController,
   logoutController,
+  getMeController,
 } = require("../controllers/auth.controller");
+const { authUser } = require("../middlewares/auth.middleware");
 
 const authRoute = express.Router();
 
@@ -14,5 +16,6 @@ authRoute.post("/verify-email", verifyEmailController);
 authRoute.post("/resend-verify-email", resendVerifyEmailController);
 authRoute.post("/sign-in", signInController);
 authRoute.post("/logout", logoutController);
+authRoute.get("/get-me", authUser, getMeController);
 
 module.exports = authRoute;
