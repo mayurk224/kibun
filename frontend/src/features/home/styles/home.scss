@@ -1,0 +1,267 @@
+// Variables
+$color-primary: #3b82f6; // blue-500
+$color-secondary: #9333ea; // purple-600
+$color-bg-light: #f9fafb; // gray-50
+$color-bg-white: #ffffff;
+$color-text-dark: #1f2937; // gray-800
+$color-text-medium: #4b5563; // gray-600
+$color-text-light: #6b7280; // gray-500
+$color-border: #f3f4f6; // gray-100
+$color-danger: #ef4444; // red-500
+$color-danger-hover: #dc2626; // red-600
+$color-success: #16a34a; // green-600
+$color-warning: #ca8a04; // yellow-600
+$color-spinner-border: #3b82f6;
+
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$radius-lg: 0.5rem;
+$radius-full: 9999px;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Keyframes
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Styles
+.home-page {
+  padding: 2rem;
+  max-width: 56rem; // max-w-4xl
+  margin: 0 auto;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  .loading-container {
+    @include flex-center;
+    min-height: 100vh;
+    width: 100%;
+
+    .loading-spinner {
+      height: 3rem;
+      width: 3rem;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: $color-spinner-border;
+      border-bottom-color: $color-spinner-border;
+      animation: spin 1s linear infinite;
+    }
+  }
+
+  .profile-card {
+    background-color: $color-bg-white;
+    box-shadow: $shadow-lg;
+    border-radius: $radius-lg;
+    overflow: hidden;
+    width: 100%;
+
+    .profile-header-bg {
+      height: 8rem;
+      background: linear-gradient(to right, $color-primary, $color-secondary);
+    }
+
+    .profile-info-container {
+      position: relative;
+      padding: 1rem 1.5rem;
+
+      .profile-avatar-wrapper {
+        position: absolute;
+        top: -4rem;
+        left: 1.5rem;
+        border: 4px solid $color-bg-white;
+        border-radius: $radius-full;
+        overflow: hidden;
+        background-color: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+        .profile-avatar {
+          width: 8rem;
+          height: 8rem;
+          object-fit: cover;
+          background-color: #e5e7eb; // gray-200
+          display: block;
+        }
+      }
+
+      .user-details {
+        margin-left: 10rem; // ml-40
+        padding-top: 0.5rem;
+
+        .user-name {
+          font-size: 1.875rem; // text-3xl
+          font-weight: 700;
+          color: $color-text-dark;
+          margin-bottom: 0.25rem;
+          line-height: 1.2;
+        }
+
+        .user-email {
+          color: $color-text-medium;
+          margin-bottom: 0.5rem;
+          font-size: 1rem;
+        }
+
+        .user-role {
+          display: inline-block;
+          background-color: #dbeafe; // blue-100
+          color: #1e40af; // blue-800
+          font-size: 0.75rem;
+          padding: 0.25rem 0.75rem;
+          border-radius: $radius-full;
+          text-transform: uppercase;
+          font-weight: 600;
+          letter-spacing: 0.025em;
+        }
+      }
+    }
+
+    .account-section {
+      padding: 1.5rem 1.5rem;
+      border-top: 1px solid $color-border;
+      margin-top: 1rem;
+
+      .section-title {
+        font-size: 1.25rem; // text-xl
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: $color-text-dark;
+      }
+
+      .details-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+
+        @media (min-width: 768px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .detail-card {
+          background-color: $color-bg-light;
+          padding: 1rem;
+          border-radius: $radius-lg;
+          border: 1px solid transparent;
+          transition: border-color 0.2s ease;
+
+          &:hover {
+             border-color: darken($color-bg-light, 10%);
+          }
+
+          .detail-label {
+            display: block;
+            font-size: 0.875rem; // text-sm
+            color: $color-text-light;
+            margin-bottom: 0.25rem;
+          }
+
+          .detail-value {
+            display: block;
+            font-weight: 500;
+            color: $color-text-dark;
+            word-break: break-all;
+
+            &.verified {
+              color: $color-success;
+            }
+
+            &.unverified {
+              color: $color-warning;
+            }
+          }
+        }
+      }
+    }
+
+    .card-footer {
+      padding: 1rem 1.5rem;
+      background-color: $color-bg-light;
+      border-top: 1px solid $color-border;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 1rem;
+
+      .error-message {
+        color: $color-danger;
+        font-size: 0.875rem;
+      }
+
+      .logout-button {
+        background-color: $color-danger;
+        color: white;
+        font-weight: 700;
+        padding: 0.5rem 1.5rem;
+        border-radius: $radius-lg;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+        &:hover {
+          background-color: $color-danger-hover;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15), 0 3px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px white, 0 0 0 4px rgba($color-danger, 0.5);
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 640px) {
+  .home-page {
+      padding: 1rem;
+  }
+
+  .home-page .profile-card .profile-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 0;
+
+    .profile-avatar-wrapper {
+      position: relative;
+      top: -3rem;
+      left: auto;
+      margin-bottom: -2.5rem;
+    }
+
+    .user-details {
+      margin-left: 0;
+      width: 100%;
+      
+      .user-name {
+          font-size: 1.5rem;
+      }
+    }
+  }
+
+  .home-page .profile-card .card-footer {
+      flex-direction: column;
+      gap: 0.5rem;
+      
+      .logout-button {
+          width: 100%;
+      }
+  }
+}

@@ -64,7 +64,10 @@ async function signUpController(req, res) {
       expiredAt: Date.now() + 24 * 60 * 60 * 1000,
     });
 
-    const verifyUrl = `${process.env.FRONTEND_URL}/api/auth/verify-email?token=${verifyToken}`;
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verifyToken}`;
+
+    console.log(`Sending verification email to: ${email}`);
+    console.log(`Verification URL: ${verifyUrl}`);
 
     await sendEmail({
       to: email,
@@ -106,6 +109,8 @@ async function signUpController(req, res) {
 async function verifyEmailController(req, res) {
   try {
     const { token } = req.body || {};
+    console.log("Received verification request with token:", token);
+
     if (!token || typeof token !== "string") {
       return res.status(400).json({
         success: false,
@@ -114,21 +119,25 @@ async function verifyEmailController(req, res) {
     }
 
     const hashToken = crypto.createHash("sha256").update(token).digest("hex");
+    console.log("Hashed token for verification:", hashToken);
 
     const verifyTokenRecord = await verifyEmailModel.findOne({
       token: hashToken,
-      expiredAt: { $gt: Date.now() },
+      expiredAt: { $gt: new Date() },
     });
 
     if (!verifyTokenRecord) {
+      console.log("Token not found or expired");
       return res.status(400).json({
         success: false,
         message: "Token is invalid or has expired",
       });
     }
 
+    console.log("Token found for user:", verifyTokenRecord.userId);
     const user = await userModel.findById(verifyTokenRecord.userId).lean();
     if (!user) {
+      console.log("User not found for token");
       await verifyEmailModel.deleteOne({ _id: verifyTokenRecord._id });
       return res.status(404).json({
         success: false,
@@ -141,6 +150,7 @@ async function verifyEmailController(req, res) {
       verifyEmailModel.deleteOne({ _id: verifyTokenRecord._id }),
     ]);
 
+    console.log("User verified successfully:", user.email);
     return res.status(200).json({
       success: true,
       message: "Email verified successfully",
@@ -200,7 +210,10 @@ async function resendVerifyEmailController(req, res) {
       expiredAt: Date.now() + 24 * 60 * 60 * 1000,
     });
 
-    const verifyUrl = `${process.env.FRONTEND_URL}/api/auth/verify-email?token=${verifyToken}`;
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verifyToken}`;
+
+    console.log(`Sending resend verification email to: ${userExist.email}`);
+    console.log(`Resend Verification URL: ${verifyUrl}`);
 
     await sendEmail({
       to: userExist.email,
@@ -209,11 +222,11 @@ async function resendVerifyEmailController(req, res) {
     });
 
     return res.status(200).json({
-      success: false,
-      message: "mail sent to register email",
+      success: true,
+      message: "Verification email sent successfully",
     });
   } catch (error) {
-    console.error(error);
+    console.error("resendVerifyEmailController error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",

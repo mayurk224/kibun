@@ -1,9 +1,18 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/login.scss";
 import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
+  const { handleLogin, isLoading, isAuthenticated, errors: authErrors } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
+
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
@@ -11,8 +20,14 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // Sync auth errors with local errors or just use them in render
+  useEffect(() => {
+    if (authErrors) {
+      setErrors((prev) => ({ ...prev, ...authErrors }));
+    }
+  }, [authErrors]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -45,28 +60,16 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
-    const { handleLogin } = useAuth();
-
+    
     if (!validateForm()) return;
 
-    setIsLoading(true);
-
-    // Simulate API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       const { identifier, password } = formData;
-      console.log("Login submitted:", { identifier, password });
-      // Handle successful login here
       await handleLogin({ identifier, password });
-      setIsLoading(false);
-      setErrors({});
-      // Redirect or show success message
-      console.log("Login successful!");
+      navigate("/");
     } catch (error) {
-      setErrors({ form: "Login failed. Please try again." });
-    } finally {
-      setIsLoading(false);
+      // Errors are handled by useAuth and sync via useEffect
+      console.error("Login failed", error);
     }
   };
 
