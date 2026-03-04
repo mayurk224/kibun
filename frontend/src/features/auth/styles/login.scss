@@ -1,0 +1,364 @@
+// Variables
+$primary-color: #6366f1;
+$primary-hover: #4f46e5;
+$background-color: #2e2e2e;
+$surface-color: #1f1f1f;
+$text-color: #ffffff;
+$text-muted: #a1a1aa;
+$error-color: #ef4444;
+$success-color: #22c55e;
+$border-color: #3f3f46;
+$focus-ring: rgba(99, 102, 241, 0.4);
+
+$spacing-xs: 0.5rem;
+$spacing-sm: 0.75rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 12px;
+
+$transition-base: all 0.2s ease-in-out;
+
+// Breakpoints
+$tablet: 768px;
+$desktop: 1024px;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin mobile-first($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+// Reset & Base
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  @include flex-center;
+  background-color: $background-color;
+  padding: $spacing-md;
+
+  .login-container {
+    width: 100%;
+    max-width: 450px;
+    background-color: $surface-color;
+    padding: $spacing-xl;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    animation: fadeIn 0.5s ease-out;
+
+    .login-header {
+      text-align: center;
+      margin-bottom: $spacing-xl;
+
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: $spacing-xs;
+        color: $text-color;
+      }
+
+      p {
+        color: $text-muted;
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+.login-form {
+  .form-error-message {
+    background-color: rgba($error-color, 0.1);
+    color: $error-color;
+    padding: $spacing-sm;
+    border-radius: $border-radius-sm;
+    margin-bottom: $spacing-lg;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid rgba($error-color, 0.2);
+  }
+
+  .form-group {
+    margin-bottom: $spacing-lg;
+
+    label {
+      display: block;
+      margin-bottom: $spacing-xs;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: $text-color;
+    }
+
+    .input-wrapper {
+      position: relative;
+
+      &.error {
+        input {
+          border-color: $error-color;
+
+          &:focus {
+            box-shadow: 0 0 0 2px rgba($error-color, 0.2);
+          }
+        }
+      }
+
+      input {
+        width: 100%;
+        padding: $spacing-sm $spacing-md;
+        padding-right: 2.5rem; // Space for icon/toggle
+        background-color: darken($surface-color, 3%);
+        border: 1px solid $border-color;
+        border-radius: $border-radius-md;
+        color: $text-color;
+        font-size: 1rem;
+        transition: $transition-base;
+
+        &::placeholder {
+          color: darken($text-muted, 10%);
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px $focus-ring;
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+
+      .error-icon {
+        position: absolute;
+        right: $spacing-md;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $error-color;
+        font-weight: bold;
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: $spacing-xs;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: $text-muted;
+        cursor: pointer;
+        padding: $spacing-xs;
+        display: flex;
+        align-items: center;
+        transition: $transition-base;
+
+        &:hover {
+          color: $text-color;
+        }
+
+        &:focus {
+          outline: none;
+          color: $primary-color;
+        }
+      }
+    }
+
+    .error-text {
+      display: block;
+      margin-top: $spacing-xs;
+      color: $error-color;
+      font-size: 0.8rem;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-xl;
+    font-size: 0.9rem;
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      padding-left: 28px;
+      color: $text-muted;
+
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+
+        &:checked~.checkmark {
+          background-color: $primary-color;
+          border-color: $primary-color;
+
+          &:after {
+            display: block;
+          }
+        }
+
+        &:focus~.checkmark {
+          box-shadow: 0 0 0 2px $focus-ring;
+        }
+      }
+
+      .checkmark {
+        position: absolute;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: darken($surface-color, 3%);
+        border: 1px solid $border-color;
+        border-radius: $border-radius-sm;
+        transition: $transition-base;
+
+        &:after {
+          content: "";
+          position: absolute;
+          display: none;
+          left: 6px;
+          top: 2px;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          transform: rotate(45deg);
+        }
+      }
+
+      &:hover {
+        color: $text-color;
+
+        .checkmark {
+          border-color: $text-muted;
+        }
+      }
+    }
+
+    .forgot-password {
+      color: $primary-color;
+      text-decoration: none;
+      transition: $transition-base;
+
+      &:hover {
+        color: $primary-hover;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: $spacing-sm;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: $border-radius-md;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: $transition-base;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 48px;
+
+    &:hover:not(:disabled) {
+      background-color: $primary-hover;
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      background-color: lighten($primary-color, 10%);
+      cursor: wait;
+      opacity: 0.8;
+    }
+
+    &.loading {
+      cursor: wait;
+    }
+  }
+
+  .register-link {
+    text-align: center;
+    margin-top: $spacing-lg;
+    color: $text-muted;
+    font-size: 0.9rem;
+
+    a {
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: $spacing-xs;
+      transition: $transition-base;
+
+      &:hover {
+        color: $primary-hover;
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Loading Spinner
+.loader {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+// Keyframes
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+@include mobile-first($tablet) {
+  .login-page {
+    .login-container {
+      padding: $spacing-xl * 1.5;
+    }
+  }
+}
