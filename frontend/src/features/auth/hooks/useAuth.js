@@ -1,6 +1,13 @@
-import { useContext } from "react";
-import { AuthContext } from "../auth.contex";
-import { register } from "../services/auth.api";
+import { useContext, useCallback } from "react";
+import { AuthContext } from "../auth.context";
+import {
+  register,
+  login,
+  logout,
+  getCurrentUser,
+  verifyEmail,
+  resendVerifyEmail,
+} from "../services/auth.api";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -15,35 +22,50 @@ export const useAuth = () => {
     setErrors,
   } = context;
 
-  async function handleRegister({ email, password, username }) {
-    try {
-      setIsLoading(true);
-      setErrors({});
-      const response = await register({ email, password, username });
-      setUser(response.user);
-      setIsAuthenticated(true);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setErrors(error.response.data.errors);
-    }
-  }
+  const handleRegister = useCallback(
+    async ({ email, password, username }) => {
+      try {
+        setIsLoading(true);
+        setErrors({});
+        await register({ email, password, username });
+        setIsLoading(false);
+        // Don't set user or authenticated here, wait for email verification
+        return true;
+      } catch (error) {
+        setIsLoading(false);
+        const errData = error.response?.data;
+        setErrors(
+          errData?.errors || { form: errData?.message || "Registration failed" }
+        );
+        throw error;
+      }
+    },
+    [setIsLoading, setErrors]
+  );
 
-  async function handleLogin({ identifier, password }) {
-    try {
-      setIsLoading(true);
-      setErrors({});
-      const response = await login({ identifier, password });
-      setUser(response.user);
-      setIsAuthenticated(true);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setErrors(error.response.data.errors);
-    }
-  }
+  const handleLogin = useCallback(
+    async ({ identifier, password }) => {
+      try {
+        setIsLoading(true);
+        setErrors({});
+        const response = await login({ identifier, password });
+        setUser(response.user);
+        setIsAuthenticated(true);
+        setIsLoading(false);
+        return response.user;
+      } catch (error) {
+        setIsLoading(false);
+        const errData = error.response?.data;
+        setErrors(
+          errData?.errors || { form: errData?.message || "Login failed" }
+        );
+        throw error;
+      }
+    },
+    [setIsLoading, setErrors, setUser, setIsAuthenticated]
+  );
 
-  async function handleLogout() {
+  const handleLogout = useCallback(async () => {
     try {
       setIsLoading(true);
       setErrors({});
@@ -53,11 +75,14 @@ export const useAuth = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      setErrors(error.response.data.errors);
+      const errData = error.response?.data;
+      setErrors(
+        errData?.errors || { form: errData?.message || "Logout failed" }
+      );
     }
-  }
+  }, [setIsLoading, setErrors, setUser, setIsAuthenticated]);
 
-  async function handleGetMe() {
+  const handleGetMe = useCallback(async () => {
     try {
       setIsLoading(true);
       setErrors({});
@@ -67,31 +92,63 @@ export const useAuth = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      setErrors(error.response.data.errors);
+      // Don't set global errors on initial load check failure, just stay unauthenticated
+      // setErrors(error.response.data.errors);
     }
-  }
+  }, [setIsLoading, setErrors, setUser, setIsAuthenticated]);
 
-  async function handleVerifyEmail({ token }) {
-    try {
-      setIsLoading(true);
-      setErrors({});
-      await verifyEmail({ token });
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setErrors(error.response.data.errors);
-    }
-  }
+  const handleVerifyEmail = useCallback(
+    async ({ token }) => {
+      try {
+        setIsLoading(true);
+        setErrors({});
+        await verifyEmail({ token });
+        setIsLoading(false);
+        return true;
+      } catch (error) {
+        setIsLoading(false);
+        const errData = error.response?.data;
+        setErrors(
+          errData?.errors || { form: errData?.message || "Verification failed" }
+        );
+        throw error;
+      }
+    },
+    [setIsLoading, setErrors]
+  );
 
-  async function handleResendVerifyEmail({ identifier }) {
-    try {
-      setIsLoading(true);
-      setErrors({});
-      await resendVerifyEmail({ identifier });
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      setErrors(error.response.data.errors);
-    }
-  }
+  const handleResendVerifyEmail = useCallback(
+    async ({ identifier }) => {
+      try {
+        setIsLoading(true);
+        setErrors({});
+        await resendVerifyEmail({ identifier });
+        setIsLoading(false);
+        return true;
+      } catch (error) {
+        setIsLoading(false);
+        const errData = error.response?.data;
+        setErrors(
+          errData?.errors || {
+            form: errData?.message || "Resend verification failed",
+          }
+        );
+        throw error;
+      }
+    },
+    [setIsLoading, setErrors]
+  );
+
+  return {
+    user,
+    isAuthenticated,
+    isLoading,
+    errors,
+    handleRegister,
+    handleLogin,
+    handleLogout,
+    handleGetMe,
+    handleVerifyEmail,
+    handleResendVerifyEmail,
+  };
 };

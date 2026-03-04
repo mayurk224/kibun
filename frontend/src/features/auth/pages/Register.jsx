@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/register.scss";
 import { useAuth } from "../hooks/useAuth";
+import { validateRegistrationForm } from "../utils/validation";
 
 const Register = () => {
+  const { handleRegister } = useAuth();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -15,6 +17,7 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,58 +29,43 @@ const Register = () => {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
+    if (errors.form) {
+      setErrors((prev) => ({ ...prev, form: "" }));
+    }
   };
 
   const validateForm = () => {
-    const newErrors = {};
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
-    } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
-    }
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-    }
-
+    const { isValid, errors: newErrors } = validateRegistrationForm(formData);
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { handleRegister } = useAuth();
-
     if (!validateForm()) return;
 
     setIsLoading(true);
 
-    // Simulate API call
     try {
       await handleRegister({
         username: formData.username,
         email: formData.email,
         password: formData.password,
       });
-      console.log("Registration submitted:", formData);
-      // Handle successful registration here
+      setIsSuccess(true);
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
     } catch (error) {
-      setErrors({ form: "Registration failed. Please try again." });
+      console.error("Registration error:", error);
+      const errorMessage =
+        error.response?.data?.message ||
+        "Registration failed. Please try again.";
+      setErrors((prev) => ({ ...prev, form: errorMessage }));
     } finally {
       setIsLoading(false);
     }
@@ -90,6 +78,31 @@ const Register = () => {
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
+
+  if (isSuccess) {
+    return (
+      <main className="register-page">
+        <div className="register-container">
+          <div className="register-header">
+            <h1>Registration Successful!</h1>
+            <p>Please check your email to verify your account.</p>
+          </div>
+          <div
+            className="success-actions"
+            style={{ textAlign: "center", marginTop: "2rem" }}
+          >
+            <Link
+              to="/login"
+              className="submit-btn"
+              style={{ display: "inline-block", textDecoration: "none" }}
+            >
+              Go to Login
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="register-page">

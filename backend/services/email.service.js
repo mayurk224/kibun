@@ -16,6 +16,11 @@ const transport = nodemailer.createTransport({
 });
 
 const sendEmail = async ({ to, subject, html }) => {
+  if (process.env.SKIP_EMAIL === "true") {
+    console.log(`[Mock Email] To: ${to}, Subject: ${subject}`);
+    console.log(`[Mock Email Content]: ${html}`);
+    return;
+  }
   try {
     await transport.sendMail({
       from: `Kibun <${process.env.OWNER_MAIL}>`,

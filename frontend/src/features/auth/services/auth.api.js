@@ -1,13 +1,53 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://localhost:3000/api",
   withCredentials: true,
 });
 
+api.interceptors.request.use((config) => {
+  console.log(
+    `[API Request] ${config.method.toUpperCase()} ${config.url}`,
+    config.data
+  );
+  return config;
+});
+
+api.interceptors.response.use(
+  (response) => {
+    console.log(
+      `[API Response] ${response.status} ${response.config.url}`,
+      response.data
+    );
+    return response;
+  },
+  (error) => {
+    const originalRequest = error.config;
+
+    // Retry on network errors or 5xx server errors
+    if (
+      originalRequest &&
+      (!error.response || error.response.status >= 500) &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true;
+      console.log(`[Auto Retry] Retrying request ${originalRequest.url}...`);
+      return new Promise((resolve) =>
+        setTimeout(() => resolve(api(originalRequest)), 1000)
+      );
+    }
+
+    console.error(
+      `[API Error] ${error.response?.status} ${error.config?.url}`,
+      error.response?.data || error.message
+    );
+    return Promise.reject(error);
+  }
+);
+
 export async function register({ email, password, username }) {
   try {
-    const response = await api.post("/auth/register", {
+    const response = await api.post("/auth/sign-up", {
       email,
       password,
       username,
@@ -21,7 +61,7 @@ export async function register({ email, password, username }) {
 
 export async function login({ identifier, password }) {
   try {
-    const response = await api.post("/auth/login", {
+    const response = await api.post("/auth/sign-in", {
       identifier,
       password,
     });
@@ -54,9 +94,12 @@ export async function logout() {
 
 export async function verifyEmail({ token }) {
   try {
-    const response = await api.post("/auth/verify-email", {
-      token,
-    });
+    // Add _retry config to prevent interceptor from retrying, as the component handles retry logic
+    const response = await api.post(
+      "/auth/verify-email",
+      { token },
+      { _retry: true }
+    );
     return response.data;
   } catch (error) {
     console.error("Verify email failed:", error);
