@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "password is required"],
       select: false,
     },
+    userVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

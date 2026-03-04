@@ -1,8 +1,21 @@
-const express  = require("express");
-const { signUpController } = require("../controllers/auth.controller");
+const express = require("express");
+const {
+  signUpController,
+  verifyEmailController,
+  resendVerifyEmailController,
+  signInController,
+  logoutController,
+  getMeController,
+} = require("../controllers/auth.controller");
+const { authUser } = require("../middlewares/auth.middleware");
 
 const authRoute = express.Router();
 
-authRoute.post("/sign-up", signUpController)
+authRoute.post("/sign-up", signUpController);
+authRoute.post("/verify-email", verifyEmailController);
+authRoute.post("/resend-verify-email", resendVerifyEmailController);
+authRoute.post("/sign-in", signInController);
+authRoute.post("/logout", logoutController);
+authRoute.get("/get-me", authUser, getMeController);
 
 module.exports = authRoute;

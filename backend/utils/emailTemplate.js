@@ -22,6 +22,20 @@ const welcomeTemplate = (username, verifyEmailUrl) => {
     `;
 };
 
+const resendVerifyEmailTemplate = (username, verifyEmailUrl) => {
+  const safeUsername = escapeHtml(username);
+  const safeUrl = escapeHtml(verifyEmailUrl);
+
+  return `
+    <h2>Resend Verify Email, ${safeUsername}!</h2>
+    <p>Please verify your email to get started:</p>
+    <a href="${safeUrl}">Verify Email</a>
+    <p>${safeUrl}</p>
+    <p>This link expires in 24 hours.</p>
+    `;
+};
+
 module.exports = {
   welcomeTemplate,
+  resendVerifyEmailTemplate,
 };
