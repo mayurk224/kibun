@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import CategoryCard from "./CategoryCard";
+import { usePlayer } from "../../../context/PlayerContext";
 
 const categories = [
   { id: "all", label: "All", count: 5, emoji: "🎵" },
@@ -15,6 +16,7 @@ const Category = ({
   setActiveCategory,
   filteredMusicList = [],
 }) => {
+  const { currentSong, playSong } = usePlayer();
   const getCategoryCount = (categoryId) => {
     if (categoryId === "all") return musicList.length;
     return musicList.filter((m) => m.mood?.toLowerCase() === categoryId).length;
@@ -85,9 +87,11 @@ const Category = ({
           {filteredMusicList.slice(0, 5).map((item) => (
             <CategoryCard
               key={item._id}
+              active={currentSong?._id === item._id}
               title={item.title}
               artist={item.artist}
               imageUrl={item.posterUrl}
+              onClick={() => playSong(item, filteredMusicList)}
             />
           ))}
         </div>

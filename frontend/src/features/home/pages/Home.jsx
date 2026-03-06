@@ -39,7 +39,7 @@ const Home = () => {
       {/* 2. Flex-1 takes up all remaining vertical space under the Navbar */}
       <div className="flex flex-1 overflow-hidden">
         {/* 3. Sidebar gets exactly 25% width and doesn't shrink */}
-        <div className="w-1/4.5 h-full shrink-0">
+        <div className="w-1/4 min-w-[280px] max-w-[350px] h-full shrink-0">
           <Sidebar
             musicList={
               activeCategory === "all"

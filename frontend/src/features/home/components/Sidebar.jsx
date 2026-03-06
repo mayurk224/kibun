@@ -1,7 +1,9 @@
 import React from "react";
 import SidebarCard from "./SidebarCard";
+import { usePlayer } from "../../../context/PlayerContext";
 
 const Sidebar = ({ musicList = [] }) => {
+  const { currentSong, isPlaying, playSong } = usePlayer();
   // Mapping SCSS variables from login.scss to inline CSS variables
   const styleVars = {
     "--primary-color": "#6366f1",
@@ -15,7 +17,7 @@ const Sidebar = ({ musicList = [] }) => {
 
   return (
     <aside
-      className="flex flex-col h-full min-h-screen w-full p-4 bg-(--background-color)"
+      className="flex flex-col h-full w-full p-4 bg-(--background-color)"
       style={styleVars}
     >
       <div className="mb-8">
@@ -27,7 +29,7 @@ const Sidebar = ({ musicList = [] }) => {
         </p>
       </div>
 
-      <div className="flex flex-col gap-2 w-full overflow-y-auto pr-2 pb-6 custom-scrollbar">
+      <div className="flex-1 min-h-0 flex flex-col gap-2 w-full overflow-y-auto pr-2 pb-6 custom-scrollbar">
         {musicList.length > 0 ? (
           musicList.map((music, index) => {
             const formatDuration = (seconds) => {
@@ -39,11 +41,13 @@ const Sidebar = ({ musicList = [] }) => {
             return (
               <SidebarCard
                 key={music._id}
-                active={index === 0}
+                active={currentSong?._id === music._id}
+                isPlaying={isPlaying}
                 title={music.title}
                 artist={music.artist || music.uploadedBy?.username || "Unknown"}
                 duration={formatDuration(music.duration)}
                 imageUrl={music.posterUrl}
+                onClick={() => playSong(music, musicList)}
               />
             );
           })

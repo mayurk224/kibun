@@ -2,14 +2,17 @@ import React from "react";
 
 const SidebarCard = ({
   active,
+  isPlaying,
   title = "Song Title",
   artist = "Artist Name",
   duration = "3:45",
   imageUrl = "",
+  onClick,
 }) => {
   return (
     <div
-      className={`group relative flex items-center justify-between w-full p-3 rounded-2xl transition-all duration-200 cursor-pointer overflow-hidden ${
+      onClick={onClick}
+      className={`group relative flex items-center w-full p-3 rounded-2xl transition-all duration-200 cursor-pointer overflow-hidden ${
         active
           ? "bg-(--surface-color) shadow-sm border border-white/10"
           : "bg-transparent border border-transparent hover:bg-(--surface-color) hover:border-slate-200/5"
@@ -34,10 +37,12 @@ const SidebarCard = ({
           )}
           <div
             className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-200 ${
-              active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+              active && isPlaying
+                ? "opacity-100"
+                : "opacity-0 group-hover:opacity-100"
             }`}
           >
-            {active ? (
+            {active && isPlaying ? (
               // Pause Icon for playing state
               <svg
                 className="w-5 h-5 text-(--primary-color) drop-shadow-md"

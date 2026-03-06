@@ -5,17 +5,22 @@ const CategoryCard = ({
   title = "Song Title",
   artist = "Artist Name",
   imageUrl = "",
+  onClick,
+  active,
 }) => {
   return (
     <div
-      className="group flex items-center gap-3 p-2 rounded-md hover:bg-white/5 transition-colors duration-200 cursor-pointer focus-within:bg-white/5 focus-within:outline-none"
+      onClick={onClick}
+      className={`group flex items-center gap-3 p-2 rounded-md transition-colors duration-200 cursor-pointer focus-within:bg-white/5 focus-within:outline-none ${
+        active ? "bg-white/10" : "hover:bg-white/5"
+      }`}
       tabIndex={0}
       role="button"
       aria-label={`Play ${title} by ${artist}`}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          // Trigger play action here
+          if (onClick) onClick();
         }
       }}
     >
