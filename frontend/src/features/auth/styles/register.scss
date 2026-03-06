@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables
 $primary-color: #6366f1;
 $primary-hover: #4f46e5;
@@ -115,7 +117,7 @@ $desktop: 1024px;
         width: 100%;
         padding: $spacing-sm $spacing-md;
         padding-right: 2.5rem; // Space for icon/toggle
-        background-color: darken($surface-color, 3%);
+        background-color: color.adjust($surface-color, $lightness: -3%);
         border: 1px solid $border-color;
         border-radius: $border-radius-md;
         color: $text-color;
@@ -123,7 +125,7 @@ $desktop: 1024px;
         transition: $transition-base;
 
         &::placeholder {
-          color: darken($text-muted, 10%);
+          color: color.adjust($text-muted, $lightness: -10%);
         }
 
         &:focus {
@@ -206,7 +208,7 @@ $desktop: 1024px;
     }
 
     &:disabled {
-      background-color: lighten($primary-color, 10%);
+      background-color: color.adjust($primary-color, $lightness: 10%);
       cursor: wait;
       opacity: 0.8;
     }
