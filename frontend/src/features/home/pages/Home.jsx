@@ -2,19 +2,9 @@ import React from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
 import Navbar from "../components/Navbar";
 import FaceExpression from "../../faceDetect/components/FaceExpression";
-import {
-  ChevronFirst,
-  ChevronLast,
-  Pause,
-  Play,
-  Repeat,
-  Shuffle,
-  Volume,
-  Volume1,
-  Volume2,
-  VolumeOff,
-  VolumeX,
-} from "lucide-react";
+import Sidebar from "../components/Sidebar";
+import Footer from "../components/Footer";
+import Category from "../components/Category";
 
 const Home = () => {
   const { user, handleLogout, isLoading, errors } = useAuth();
@@ -31,139 +21,56 @@ const Home = () => {
   }
 
   return (
-    <div className="w-full h-screen">
-      <Navbar user={user} handleLogout={handleLogout} />
-      <div className="flex h-[calc(100vh-64px)]">
-        <aside className="w-1/4 h-full">
-          <h2 className="text-2xl font-bold">Playlist</h2>
-          <p className="text-gray-600">
-            Your personalized playlist will be displayed here.
-          </p>
-          <div className="w-full">
-            {/* song card with image, title, artist, play button, song duration */}
-            <div className="songCard flex w-full">
-              <div className="flex items-center w-full">
-                <div className="h-10 w-10 bg-gray-200 rounded-lg"></div>
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col">
-                    <h3 className="text-lg font-bold">Song Title</h3>
-                    <p className="text-gray-600">Artist Name</p>
-                  </div>
-                  <div className="">
-                    <p className="text-gray-600">3:45</p>
-                  </div>
+    <div className="w-full h-screen flex flex-col overflow-hidden bg-[#1f1f1f] text-white">
+      {/* 1. Navbar stays pinned to the top */}
+      <div className="shrink-0">
+        <Navbar user={user} handleLogout={handleLogout} />
+      </div>
+
+      {/* 2. Flex-1 takes up all remaining vertical space under the Navbar */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* 3. Sidebar gets exactly 25% width and doesn't shrink */}
+        <div className="w-1/4.5 h-full shrink-0">
+          <Sidebar />
+        </div>
+
+        {/* 4. Main content wrapper takes remaining 75% and handles vertical scrolling */}
+        <div className="flex-1 flex flex-col h-full overflow-y-auto">
+          {/* flex-1 pushes the footer to the bottom even if content is short */}
+          <main className="flex-1 p-6">
+            {/* Used gap-6 instead of manual widths for better responsive behavior */}
+            <section className="flex flex-col md:flex-row items-center justify-between w-full mb-5 gap-6 h-[250px]">
+              <div className="flex-1 bg-[url('https://images.pexels.com/photos/6270264/pexels-photo-6270264.jpeg')] bg-cover h-full p-5 rounded-2xl">
+                <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Now Playing
+                </p>
+                <h1 className="text-lg font-bold mt-1">RIO - NetSky</h1>
+                <div className="lyrics h-[160px] flex flex-col justify-center">
+                  <h2 className="text-xl font-bold mt-1">
+                    Wherever she goes, I go, we roll, we go
+                  </h2>
+                  <h2 className="text-2xl font-bold mt-1">
+                    Flying over cities down to Rio, it's real
+                  </h2>
+                  <h2 className="text-xl font-bold mt-1">
+                    Love that I feel, well nothing lasts forever
+                  </h2>
                 </div>
               </div>
-            </div>
-          </div>
-        </aside>
-        <div className="">
-          <main>
-            <section className="flex items-center justify-center w-full">
-              <div className="w-1/2">
-                <p>now playing</p>
-                <h2>Title</h2>
-                <h1>Song lyrics</h1>
-              </div>
-              <div className="w-1/2">
+              <div className="flex justify-center md:justify-end h-[250px]">
                 <FaceExpression />
               </div>
             </section>
+
             <section>
-              <h3>select Category</h3>
-              <div className="flex">
-                <button>
-                  happy <span>5</span>
-                </button>
-                <button>
-                  sad <span>5</span>
-                </button>
-                <button>
-                  surprise <span>5</span>
-                </button>
-                <button>
-                  neutral <span>5</span>
-                </button>
-              </div>
-              <div className="">
-                <h4>Top 5 from songs from category</h4>
-                <div className="">
-                  {/* song card with image, title, artist, play button */}
-                  <div className="topSongCard">
-                    <div className="h-20 w-20 bg-gray-200 rounded-lg">
-                      <img src="" alt="" />
-                    </div>
-                    <div className="">
-                      <h3 className="text-lg font-bold">Song Title</h3>
-                      <p className="text-gray-600">Artist Name</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Category />
             </section>
           </main>
-          <footer>
-            {/* previous button, play pause button, next button , volume control, song title, artist, song image , progress bar , shuffle button, repeat button*/}
-            footer
-            <div className="flex items-center">
-              <div className="flex items-center gap-4">
-                <img
-                  src=""
-                  alt=""
-                  className="h-20 w-20 rounded-lg bg-gray-200"
-                />
-                <div className="">
-                  <h3 className="text-lg font-bold">Song Title</h3>
-                  <p className="text-gray-600">Artist Name</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between w-full">
-                <div className="flex items-center">
-                  <button>
-                    <ChevronFirst />
-                  </button>
-                  <button>
-                    <Pause />
-                  </button>
-                  <button>
-                    <Play />
-                  </button>
-                  <button>
-                    <ChevronLast />
-                  </button>
-                </div>
-                <div className="">
-                  {/* progress bar */}
-                  {/* song duration */}
-                </div>
-                <div className="flex items-center">
-                  <button>
-                    <Shuffle />
-                  </button>
-                  <button>
-                    <Repeat />
-                  </button>
-                  <div className="flex items-center">
-                    <button>
-                      <Volume />
-                    </button>
-                    <button>
-                      <Volume1 />
-                    </button>
-                    <button>
-                      <Volume2 />
-                    </button>
-                    <button>
-                      <VolumeOff />
-                    </button>
-                    <button>
-                      <VolumeX />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </footer>
+
+          {/* 5. Footer stays at the bottom of the scrolling content */}
+          <div className="shrink-0 mt-auto">
+            <Footer />
+          </div>
         </div>
       </div>
     </div>
