@@ -1,6 +1,8 @@
-import React from "react";
-
+import React, { useState } from "react";
+import UploadModal from "./UploadModal";
 const Navbar = ({ user, handleLogout }) => {
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+
   return (
     <nav className="w-full bg-[#1f1f1f] border-b border-[#3f3f46] px-6 py-3 sticky top-0 z-50 shadow-sm">
       <div className=" mx-auto flex items-center justify-between">
@@ -9,23 +11,33 @@ const Navbar = ({ user, handleLogout }) => {
 
         {/* Right Actions */}
         <div className="flex items-center gap-4 sm:gap-6">
-          <button className="flex items-center gap-2 px-4 py-2 bg-[#6366f1] hover:bg-[#4f46e5] text-white text-sm font-medium rounded-md transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:ring-offset-2 focus:ring-offset-[#1f1f1f]">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          <div className="relative">
+            <button
+              onClick={() => setIsUploadOpen(!isUploadOpen)}
+              className="flex items-center gap-2 px-4 py-2 bg-[#6366f1] hover:bg-[#4f46e5] text-white text-sm font-medium rounded-md transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-              />
-            </svg>
-            <span className="hidden sm:inline">Upload</span>
-          </button>
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                />
+              </svg>
+              <span className="hidden sm:inline">Upload</span>
+            </button>
+
+            <UploadModal
+              isOpen={isUploadOpen}
+              onClose={() => setIsUploadOpen(false)}
+            />
+          </div>
 
           <div className="flex items-center pl-4 sm:pl-6 border-l border-[#3f3f46]">
             <div className="flex items-center mr-2 sm:mr-4 cursor-pointer group">

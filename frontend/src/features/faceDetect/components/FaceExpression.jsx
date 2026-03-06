@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { detect, init } from "../utils/utils";
-import { Radar, ScanFace, VideoOff } from "lucide-react";
+import { Radar, ScanFace, VideoOff, Video } from "lucide-react";
 
 const FaceExpression = () => {
   const videoRef = useRef(null);
@@ -8,16 +8,16 @@ const FaceExpression = () => {
   const streamRef = useRef(null);
 
   const [expression, setExpression] = useState("Detecting...");
+  const [isCameraOn, setIsCameraOn] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-    let animationFrameId;
+    if (!isCameraOn) {
+      setExpression("Camera Off");
+      return;
+    }
 
-    const loop = () => {
-      if (!mounted) return;
-      detect({ landmarkerRef, videoRef, setExpression });
-      animationFrameId = requestAnimationFrame(loop);
-    };
+    setExpression("Detecting...");
+    let mounted = true;
 
     const startCamera = async () => {
       try {
@@ -37,7 +37,6 @@ const FaceExpression = () => {
           return;
         }
         setExpression("Camera Ready");
-        loop();
       } catch (err) {
         if (!mounted) return;
         console.error("Error initializing face detection:", err);
@@ -60,9 +59,6 @@ const FaceExpression = () => {
 
     return () => {
       mounted = false;
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
       if (landmarkerRef.current) {
         landmarkerRef.current.close();
       }
@@ -73,9 +69,14 @@ const FaceExpression = () => {
         tracks.forEach((track) => {
           track.stop();
         });
+        videoRef.current.srcObject = null;
       }
     };
-  }, []);
+  }, [isCameraOn]);
+
+  const toggleCamera = () => {
+    setIsCameraOn((prev) => !prev);
+  };
 
   return (
     <div className="relative w-full max-w-sm aspect-4/3 rounded-2xl overflow-hidden bg-[#141414] ring-1 ring-white/10 shadow-lg">
@@ -87,7 +88,7 @@ const FaceExpression = () => {
       {/* Video Feed */}
       <video
         ref={videoRef}
-        className="relative z-10 w-full h-full object-cover"
+        className={`relative z-10 w-full h-full object-cover transition-opacity duration-300 ${!isCameraOn ? "opacity-0" : "opacity-100"}`}
         playsInline
         autoPlay
         muted
@@ -96,10 +97,11 @@ const FaceExpression = () => {
       {/* Floating Top Control: Camera Toggle */}
       <div className="absolute top-3 right-3 z-20">
         <button
+          onClick={toggleCamera}
           className="flex items-center justify-center h-8 w-8 rounded-full bg-black/40 backdrop-blur-md text-zinc-400 hover:text-white hover:bg-black/60 ring-1 ring-white/10 transition-all duration-200"
           aria-label="Toggle camera"
         >
-          <VideoOff size={16} />
+          {isCameraOn ? <Video size={16} /> : <VideoOff size={16} />}
         </button>
       </div>
 
@@ -118,6 +120,7 @@ const FaceExpression = () => {
 
         {/* Scan Action Button */}
         <button
+          onClick={() => detect({ landmarkerRef, videoRef, setExpression })}
           className="text-zinc-400 hover:text-white transition-colors duration-200 group"
           aria-label="Scan face"
         >
