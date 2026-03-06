@@ -1,7 +1,67 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 const UploadModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
+  const [audioFile, setAudioFile] = useState(null);
+  const [lyricsFile, setLyricsFile] = useState(null);
+  const [category, setCategory] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+  const [message, setMessage] = useState({ text: "", type: "" });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!audioFile || !category) {
+      setMessage({
+        text: "Audio file and category are required",
+        type: "error",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("music", audioFile);
+    if (lyricsFile) {
+      formData.append("lyric", lyricsFile);
+    }
+    formData.append("mood", category);
+
+    setIsUploading(true);
+    setMessage({ text: "", type: "" });
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/upload",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      if (response.data.success) {
+        setMessage({ text: "Upload successful!", type: "success" });
+        setTimeout(() => {
+          onClose();
+          setAudioFile(null);
+          setLyricsFile(null);
+          setCategory("");
+          setMessage({ text: "", type: "" });
+        }, 2000);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      setMessage({
+        text: error.response?.data?.message || "Failed to upload file",
+        type: "error",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   // Close when clicking outside
   useEffect(() => {
@@ -61,7 +121,15 @@ const UploadModal = ({ isOpen, onClose }) => {
         </button>
       </div>
 
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        {message.text && (
+          <div
+            className={`p-3 rounded-lg text-sm ${message.type === "success" ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" : "bg-red-500/10 text-red-500 border border-red-500/20"}`}
+          >
+            {message.text}
+          </div>
+        )}
+
         {/* Audio Input */}
         <div>
           <label
@@ -82,6 +150,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               file:bg-[#3f3f46] file:text-white
               hover:file:bg-[#52525b] cursor-pointer
               bg-[#27272a] rounded-lg border border-[#3f3f46] focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all"
+            onChange={(e) => setAudioFile(e.target.files[0])}
           />
         </div>
 
@@ -105,6 +174,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               file:bg-[#3f3f46] file:text-white
               hover:file:bg-[#52525b] cursor-pointer
               bg-[#27272a] rounded-lg border border-[#3f3f46] focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all"
+            onChange={(e) => setLyricsFile(e.target.files[0])}
           />
         </div>
 
@@ -119,16 +189,17 @@ const UploadModal = ({ isOpen, onClose }) => {
           <div className="relative">
             <select
               id="category"
-              defaultValue=""
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
               className="w-full bg-[#27272a] text-white text-sm border border-[#3f3f46] rounded-lg py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all appearance-none cursor-pointer"
             >
               <option value="" disabled>
                 Select a category
               </option>
-              <option value="happy">Happy</option>
-              <option value="sad">Sad</option>
-              <option value="surprise">Surprise</option>
-              <option value="neutral">Neutral</option>
+              <option value="Happy">Happy</option>
+              <option value="Sad">Sad</option>
+              <option value="Surprise">Surprise</option>
+              <option value="Neutral">Neutral</option>
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-[#a1a1aa]">
               <svg
@@ -152,9 +223,10 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full mt-6 py-2.5 bg-[#6366f1] hover:bg-[#4f46e5] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
+          disabled={isUploading}
+          className="w-full mt-6 py-2.5 bg-[#6366f1] hover:bg-[#4f46e5] disabled:bg-[#4f46e5]/50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
         >
-          Upload Track
+          {isUploading ? "Uploading..." : "Upload Track"}
         </button>
       </form>
     </div>
