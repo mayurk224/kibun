@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { useHome } from "../hooks/useHome";
 import Navbar from "../components/Navbar";
 import FaceExpression from "../../faceDetect/components/FaceExpression";
 import Sidebar from "../components/Sidebar";
@@ -7,7 +8,15 @@ import Footer from "../components/Footer";
 import Category from "../components/Category";
 
 const Home = () => {
-  const { user, handleLogout, isLoading, errors } = useAuth();
+  const { user, handleLogout, isLoading: isAuthLoading, errors } = useAuth();
+  const { musicList, isFetchingMusic, handleGetAllMusic } = useHome();
+  const [activeCategory, setActiveCategory] = useState("all");
+
+  useEffect(() => {
+    handleGetAllMusic();
+  }, [handleGetAllMusic]);
+
+  const isLoading = isAuthLoading || isFetchingMusic;
 
   if (isLoading) {
     return (
@@ -31,7 +40,16 @@ const Home = () => {
       <div className="flex flex-1 overflow-hidden">
         {/* 3. Sidebar gets exactly 25% width and doesn't shrink */}
         <div className="w-1/4.5 h-full shrink-0">
-          <Sidebar />
+          <Sidebar
+            musicList={
+              activeCategory === "all"
+                ? musicList
+                : musicList.filter(
+                    (m) =>
+                      m.mood?.toLowerCase() === activeCategory.toLowerCase(),
+                  )
+            }
+          />
         </div>
 
         {/* 4. Main content wrapper takes remaining 75% and handles vertical scrolling */}
@@ -49,7 +67,7 @@ const Home = () => {
                   <h2 className="text-xl font-bold mt-1">
                     Wherever she goes, I go, we roll, we go
                   </h2>
-                  <h2 className="text-2xl font-bold mt-1">
+                  <h2 className="text-2xl font-bold mt-1 active">
                     Flying over cities down to Rio, it's real
                   </h2>
                   <h2 className="text-xl font-bold mt-1">
@@ -63,7 +81,20 @@ const Home = () => {
             </section>
 
             <section>
-              <Category />
+              <Category
+                musicList={musicList}
+                activeCategory={activeCategory}
+                setActiveCategory={setActiveCategory}
+                filteredMusicList={
+                  activeCategory === "all"
+                    ? musicList
+                    : musicList.filter(
+                        (m) =>
+                          m.mood?.toLowerCase() ===
+                          activeCategory.toLowerCase(),
+                      )
+                }
+              />
             </section>
           </main>
 

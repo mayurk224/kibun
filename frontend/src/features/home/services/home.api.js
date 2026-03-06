@@ -40,3 +40,13 @@ export async function uploadTrack(formData) {
     throw error;
   }
 }
+
+export async function getAllMusic() {
+  try {
+    const response = await api.get("/music/all");
+    return response.data;
+  } catch (error) {
+    console.error("Fetch music failed:", error);
+    throw error;
+  }
+}

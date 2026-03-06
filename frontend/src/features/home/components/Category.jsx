@@ -2,14 +2,23 @@ import React, { useState } from "react";
 import CategoryCard from "./CategoryCard";
 
 const categories = [
+  { id: "all", label: "All", count: 5, emoji: "🎵" },
   { id: "happy", label: "Happy", count: 5, emoji: "😊" },
   { id: "sad", label: "Sad", count: 5, emoji: "😢" },
   { id: "surprise", label: "Surprise", count: 5, emoji: "😮" },
   { id: "neutral", label: "Neutral", count: 5, emoji: "😐" },
 ];
 
-const Category = () => {
-  const [activeCategory, setActiveCategory] = useState("happy");
+const Category = ({
+  musicList = [],
+  activeCategory,
+  setActiveCategory,
+  filteredMusicList = [],
+}) => {
+  const getCategoryCount = (categoryId) => {
+    if (categoryId === "all") return musicList.length;
+    return musicList.filter((m) => m.mood?.toLowerCase() === categoryId).length;
+  };
 
   return (
     <div className="w-full flex flex-col gap-10 py-6">
@@ -51,7 +60,7 @@ const Category = () => {
                 }
               `}
                 >
-                  {cat.count}
+                  {getCategoryCount(cat.id)}
                 </span>
               </button>
             );
@@ -73,11 +82,12 @@ const Category = () => {
 
         {/* Responsive Grid for Category Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-          {[1, 2, 3, 4, 5].map((item) => (
+          {filteredMusicList.slice(0, 5).map((item) => (
             <CategoryCard
-              key={item}
-              title={`Song Title ${item}`}
-              artist="Artist Name"
+              key={item._id}
+              title={item.title}
+              artist={item.artist}
+              imageUrl={item.posterUrl}
             />
           ))}
         </div>

@@ -5,6 +5,7 @@ const SidebarCard = ({
   title = "Song Title",
   artist = "Artist Name",
   duration = "3:45",
+  imageUrl = "",
 }) => {
   return (
     <div
@@ -24,6 +25,13 @@ const SidebarCard = ({
       <div className="flex items-center gap-4 w-full ml-1">
         {/* Image Placeholder with Hover Play Icon */}
         <div className="relative h-12 w-12 shrink-0 bg-(--border-color) rounded-xl overflow-hidden transition-transform duration-300 group-hover:scale-105 group-active:scale-95 shadow-inner">
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt={title}
+              className="w-full h-full object-cover"
+            />
+          )}
           <div
             className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-200 ${
               active ? "opacity-100" : "opacity-0 group-hover:opacity-100"
