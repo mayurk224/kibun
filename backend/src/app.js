@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const uploadRoute = require("../routes/upload.route");
+const musicRoute = require("../routes/music.route");
 const { authUser } = require("../middlewares/auth.middleware");
 
 const app = express();
@@ -31,5 +32,6 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoute);
 app.use("/api/upload", uploadRoute);
+app.use("/api/music", musicRoute);
 
 module.exports = app;
