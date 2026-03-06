@@ -12,9 +12,13 @@ const musicSchema = new mongoose.Schema(
       required: [true, "artist is required"],
       trim: true,
     },
+    duration: {
+      type: Number,
+      required: [true, "duration is required"],
+    },
     posterUrl: {
       type: String,
-      required: [true, "poster url is required"],
+      required: [false, "poster url is required"],
     },
     musicUrl: {
       type: String,

@@ -1,7 +1,5 @@
 const musicModel = require("../models/music.model");
 const { uploadToCloud } = require("../services/upload.service");
-const id3 = require("node-id3");
-
 async function uploadFiles(req, res) {
   try {
     const { mood } = req.body;
@@ -17,22 +15,30 @@ async function uploadFiles(req, res) {
       });
     }
 
-    const tags = id3.read(musicFile.buffer);
-    let posterFile = null;
+    const mm = await import("music-metadata");
+    const metadata = await mm.parseBuffer(
+      musicFile.buffer,
+      musicFile.mimetype || "audio/mpeg",
+    );
 
-    if (tags && tags.image && tags.image.imageBuffer) {
-      const mimeStr = (tags.image.mime || "image/jpeg").toLowerCase();
+    let posterFile = null;
+    const picture = metadata.common.picture?.[0];
+
+    if (picture && picture.data) {
+      const mimeStr = (picture.format || "image/jpeg").toLowerCase();
       const ext = mimeStr.includes("png") ? "png" : "jpg";
       const mime = mimeStr.includes("/")
         ? mimeStr
         : `image/${mimeStr === "jpg" ? "jpeg" : mimeStr}`;
 
       posterFile = {
-        buffer: tags.image.imageBuffer,
+        buffer: picture.data,
         originalname: `poster_${Date.now()}.${ext}`,
         mimetype: mime,
       };
     }
+
+    const duration = metadata.format.duration || 0;
 
     const userId = req.user.userId;
 
@@ -45,11 +51,12 @@ async function uploadFiles(req, res) {
     });
 
     const music = new musicModel({
-      title: tags.title || "Unknown Title",
-      artist: tags.artist || "Unknown Artist",
-      posterUrl: result.poster.url,
-      musicUrl: result.music.url,
-      lyricUrl: result.lyric.url,
+      title: metadata.common.title || "Unknown Title",
+      artist: metadata.common.artist || "Unknown Artist",
+      duration,
+      posterUrl: result.poster?.url || "",
+      musicUrl: result.music?.url || "",
+      lyricUrl: result.lyric?.url || "",
       uploadedBy: userId,
       mood,
     });
