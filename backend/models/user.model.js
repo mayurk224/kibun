@@ -27,8 +27,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    uploadCount: {
+      type: Number,
+      default: 0,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 userSchema.post("save", function (error, doc, next) {
