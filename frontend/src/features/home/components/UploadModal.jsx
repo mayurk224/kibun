@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { useHome } from "../hooks/useHome";
 
 const UploadModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
   const [audioFile, setAudioFile] = useState(null);
   const [lyricsFile, setLyricsFile] = useState(null);
   const [category, setCategory] = useState("");
-  const [isUploading, setIsUploading] = useState(false);
-  const [message, setMessage] = useState({ text: "", type: "" });
+  const { isUploading, message, setMessage, handleUploadTrack } = useHome();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,39 +26,16 @@ const UploadModal = ({ isOpen, onClose }) => {
     }
     formData.append("mood", category);
 
-    setIsUploading(true);
-    setMessage({ text: "", type: "" });
+    const success = await handleUploadTrack(formData);
 
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/upload",
-        formData,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      if (response.data.success) {
-        setMessage({ text: "Upload successful!", type: "success" });
-        setTimeout(() => {
-          onClose();
-          setAudioFile(null);
-          setLyricsFile(null);
-          setCategory("");
-          setMessage({ text: "", type: "" });
-        }, 2000);
-      }
-    } catch (error) {
-      console.error("Upload error:", error);
-      setMessage({
-        text: error.response?.data?.message || "Failed to upload file",
-        type: "error",
-      });
-    } finally {
-      setIsUploading(false);
+    if (success) {
+      setTimeout(() => {
+        onClose();
+        setAudioFile(null);
+        setLyricsFile(null);
+        setCategory("");
+        setMessage({ text: "", type: "" });
+      }, 2000);
     }
   };
 
