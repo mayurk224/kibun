@@ -106,7 +106,7 @@ const Home = () => {
             {/* previous button, play pause button, next button , volume control, song title, artist, song image , progress bar , shuffle button, repeat button*/}
             footer
             <div className="flex items-center">
-              <div className="flex items-center">
+              <div className="flex items-center gap-4">
                 <img
                   src=""
                   alt=""
