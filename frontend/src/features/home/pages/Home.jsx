@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useHome } from "../hooks/useHome";
+import { usePlayer } from "../../../context/PlayerContext";
+import { useLyrics } from "../../../hooks/useLyrics";
 import Navbar from "../components/Navbar";
 import FaceExpression from "../../faceDetect/components/FaceExpression";
 import Sidebar from "../components/Sidebar";
@@ -10,11 +12,30 @@ import Category from "../components/Category";
 const Home = () => {
   const { user, handleLogout, isLoading: isAuthLoading, errors } = useAuth();
   const { musicList, isFetchingMusic, handleGetAllMusic } = useHome();
+  const { currentSong, progress } = usePlayer();
+  const {
+    lyrics,
+    activeLine,
+    loading: lyricsLoading,
+    error: lyricsError,
+  } = useLyrics(currentSong?.lyricUrl, progress);
+
   const [activeCategory, setActiveCategory] = useState("all");
+  const lyricsContainerRef = useRef(null);
+  const activeLineRef = useRef(null);
 
   useEffect(() => {
     handleGetAllMusic();
   }, [handleGetAllMusic]);
+
+  useEffect(() => {
+    if (activeLineRef.current && lyricsContainerRef.current) {
+      activeLineRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [activeLine]);
 
   const isLoading = isAuthLoading || isFetchingMusic;
 
@@ -57,25 +78,75 @@ const Home = () => {
           {/* flex-1 pushes the footer to the bottom even if content is short */}
           <main className="flex-1 p-6">
             {/* Used gap-6 instead of manual widths for better responsive behavior */}
-            <section className="flex flex-col md:flex-row items-center justify-between w-full mb-5 gap-6 h-[250px]">
-              <div className="flex-1 bg-[url('https://images.pexels.com/photos/6270264/pexels-photo-6270264.jpeg')] bg-cover h-full p-5 rounded-2xl">
-                <p className="text-sm font-semibold uppercase tracking-wider text-gray-500">
+            <section className="flex flex-col md:flex-row items-center justify-between w-full mb-5 gap-6 h-[249px]">
+              <div
+                className="flex-1 bg-cover bg-center h-full p-5 rounded-2xl relative shadow-lg"
+                style={{
+                  // Added a gradient overlay directly to the style to ensure text is always readable
+                  backgroundImage: currentSong?.posterUrl
+                    ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(15, 15, 15, 0.9) 100%), url('${currentSong.posterUrl}')`
+                    : "linear-gradient(to bottom, #1f2937, #111827)",
+                }}
+              >
+                <p className="text-sm font-semibold uppercase tracking-wider text-gray-300 drop-shadow-md">
                   Now Playing
                 </p>
-                <h1 className="text-lg font-bold mt-1">RIO - NetSky</h1>
-                <div className="lyrics h-[160px] flex flex-col justify-center">
-                  <h2 className="text-xl font-bold mt-1">
-                    Wherever she goes, I go, we roll, we go
-                  </h2>
-                  <h2 className="text-2xl font-bold mt-1 active">
-                    Flying over cities down to Rio, it's real
-                  </h2>
-                  <h2 className="text-xl font-bold mt-1">
-                    Love that I feel, well nothing lasts forever
-                  </h2>
+                {/* Added text-white, line-clamp, and drop-shadow for better legibility */}
+                <h1 className="text-lg font-bold mt-1 text-white drop-shadow-lg line-clamp-1">
+                  {currentSong
+                    ? `${currentSong.title} - ${currentSong.artist}`
+                    : "No song selected"}
+                </h1>
+
+                <div
+                  ref={lyricsContainerRef}
+                  className="lyrics h-[100px] flex flex-col overflow-y-auto pr-2 custom-scrollbar mt-10"
+                  style={{
+                    // Smoothly fades the lyrics at the top and bottom of the container
+                    maskImage:
+                      "linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)",
+                    WebkitMaskImage:
+                      "linear-gradient(to bottom, transparent, black 15%, black 85%, transparent)",
+                  }}
+                >
+                  {lyricsLoading && (
+                    <p className="text-gray-400 mt-auto mb-auto text-center animate-pulse">
+                      Loading lyrics...
+                    </p>
+                  )}
+                  {lyricsError && (
+                    <p className="text-red-400 mt-auto mb-auto text-center">
+                      {lyricsError}
+                    </p>
+                  )}
+                  {!lyricsLoading && !lyricsError && lyrics.length === 0 && (
+                    <p className="text-gray-400 mt-auto mb-auto text-center italic">
+                      No lyrics available
+                    </p>
+                  )}
+                  {!lyricsLoading &&
+                    !lyricsError &&
+                    lyrics.map((line, index) => {
+                      const isActive = index === activeLine;
+                      return (
+                        <h2
+                          key={index}
+                          ref={isActive ? activeLineRef : null}
+                          // Enhanced the active state transition with slight scaling and opacity changes
+                          className={`transition-all duration-300 mt-2 ${
+                            isActive
+                              ? "text-2xl font-bold text-white active drop-shadow-md scale-100 opacity-100"
+                              : "text-xl font-medium text-gray-400 scale-95 opacity-50 hover:opacity-75 cursor-default"
+                          }`}
+                        >
+                          {line.text}
+                        </h2>
+                      );
+                    })}
                 </div>
               </div>
-              <div className="flex justify-center md:justify-end h-[250px]">
+
+              <div className="flex justify-center md:justify-end h-full">
                 <FaceExpression />
               </div>
             </section>
