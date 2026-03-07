@@ -14,11 +14,13 @@ const Sidebar = ({ musicList = [] }) => {
 
   return (
     <aside className="flex flex-col h-full w-full p-4 bg-[var(--bg-app)] backdrop-blur-md border-r-0.5 border-[var(--border-subtle)] relative z-10">
-      <div className="mb-8 px-2">
+      <div className="mb-5 px-2">
         <h2 className="text-2xl font-bold tracking-tight text-[var(--text-high-emphasis)] mb-2">
           Playlist
         </h2>
-        <p className="text-sm text-[var(--text-muted)] leading-relaxed">Your</p>
+        <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+          Your personalized collection of tracks curated for your current vibe.
+        </p>
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col gap-2 w-full overflow-y-auto pr-2 pb-6 custom-scrollbar">
