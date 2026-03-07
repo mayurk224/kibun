@@ -18,9 +18,7 @@ const Sidebar = ({ musicList = [] }) => {
         <h2 className="text-2xl font-bold tracking-tight text-[var(--text-high-emphasis)] mb-2">
           Playlist
         </h2>
-        <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-          Your currated tracks.
-        </p>
+        <p className="text-sm text-[var(--text-muted)] leading-relaxed">Your</p>
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col gap-2 w-full overflow-y-auto pr-2 pb-6 custom-scrollbar">

@@ -13,7 +13,7 @@ const SidebarCard = ({
   return (
     <div
       onClick={onClick}
-      className={`group relative flex items-center w-full p-3 rounded-2xl transition-all duration-200 cursor-pointer overflow-hidden ${
+      className={`group relative shrink-0 flex items-center w-full p-3 rounded-2xl transition-all duration-200 cursor-pointer overflow-hidden ${
         active
           ? "bg-[rgba(241,241,241,0.08)] shadow-sm border border-[var(--border-accent)]"
           : "bg-transparent border border-transparent hover:bg-[rgba(241,241,241,0.04)] hover:border-[var(--border-subtle)]"

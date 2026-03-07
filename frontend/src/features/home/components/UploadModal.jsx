@@ -1,11 +1,70 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useHome } from "../hooks/useHome";
+import { ExternalLink } from "lucide-react";
+import { Link } from "react-router";
 
 const UploadModal = ({ isOpen, onClose }) => {
   const modalRef = useRef(null);
   const [audioFile, setAudioFile] = useState(null);
+  const [audioError, setAudioError] = useState("");
   const [lyricsFile, setLyricsFile] = useState(null);
+  const [lyricsError, setLyricsError] = useState("");
   const [category, setCategory] = useState("");
+
+  const handleAudioSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setAudioError("");
+      return;
+    }
+
+    if (
+      file.type !== "audio/mpeg" &&
+      !file.name.toLowerCase().endsWith(".mp3")
+    ) {
+      e.target.value = "";
+      setAudioError("Invalid file type. Please select a .mp3 audio file.");
+      setAudioFile(null);
+      return;
+    }
+
+    const MAX_AUDIO_SIZE = 10 * 1024 * 1024;
+    if (file.size > MAX_AUDIO_SIZE) {
+      e.target.value = "";
+      setAudioError("Audio file size must be 10MB or less.");
+      setAudioFile(null);
+      return;
+    }
+
+    setAudioError("");
+    setAudioFile(file);
+  };
+
+  const handleLyricsSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setLyricsError("");
+      return;
+    }
+
+    if (!file.name.toLowerCase().endsWith(".lrc")) {
+      e.target.value = "";
+      setLyricsError("Invalid file type. Please select a .lrc lyrics file.");
+      setLyricsFile(null);
+      return;
+    }
+
+    const MAX_LYRICS_SIZE = 1 * 1024 * 1024;
+    if (file.size > MAX_LYRICS_SIZE) {
+      e.target.value = "";
+      setLyricsError("Lyrics file size must be 1MB or less.");
+      setLyricsFile(null);
+      return;
+    }
+
+    setLyricsError("");
+    setLyricsFile(file);
+  };
   const { isUploading, message, setMessage, handleUploadTrack } = useHome();
 
   const handleSubmit = async (e) => {
@@ -32,7 +91,9 @@ const UploadModal = ({ isOpen, onClose }) => {
       setTimeout(() => {
         onClose();
         setAudioFile(null);
+        setAudioError("");
         setLyricsFile(null);
+        setLyricsError("");
         setCategory("");
         setMessage({ text: "", type: "" });
       }, 2000);
@@ -110,13 +171,24 @@ const UploadModal = ({ isOpen, onClose }) => {
 
         {/* Audio Input */}
         <div>
-          <label
-            className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
-            htmlFor="audioFile"
-          >
-            Audio File{" "}
-            <span className="text-[var(--text-muted)] font-normal">(.mp3)</span>
-          </label>
+          <div className="flex items-center justify-between">
+            <label
+              className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
+              htmlFor="audioFile"
+            >
+              Audio File{" "}
+              <span className="text-[var(--text-muted)] font-normal">
+                (.mp3)
+              </span>
+            </label>
+            <Link
+              to="https://spotdown.org/"
+              className="text-[var(--text-muted)] hover:text-[var(--text-high-emphasis)] transition-all"
+              target="_blank"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </div>
           <input
             type="file"
             id="audioFile"
@@ -128,19 +200,35 @@ const UploadModal = ({ isOpen, onClose }) => {
               file:bg-[var(--bg-app)] file:text-[var(--text-high-emphasis)] file:border file:border-[var(--border-subtle)]
               hover:file:bg-white/5 cursor-pointer
               bg-[rgba(11,17,34,0.3)] rounded-lg border border-[var(--border-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:border-[var(--color-gardens)] transition-all"
-            onChange={(e) => setAudioFile(e.target.files[0])}
+            onChange={handleAudioSelect}
           />
+          {audioError && (
+            <p className="mt-1.5 text-sm text-[var(--color-danger,theme(colors.red.500))]">
+              {audioError}
+            </p>
+          )}
         </div>
 
         {/* Lyrics Input */}
         <div>
-          <label
-            className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
-            htmlFor="lyricsFile"
-          >
-            Lyrics File{" "}
-            <span className="text-[var(--text-muted)] font-normal">(.lrc)</span>
-          </label>
+          <div className="flex items-center justify-between">
+            <label
+              className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
+              htmlFor="lyricsFile"
+            >
+              Lyrics File{" "}
+              <span className="text-[var(--text-muted)] font-normal">
+                (.lrc)
+              </span>
+            </label>
+            <Link
+              to="https://lrc-get.vercel.app/"
+              className="text-[var(--text-muted)] hover:text-[var(--text-high-emphasis)] transition-all"
+              target="_blank"
+            >
+              <ExternalLink className="h-4 w-4" />
+            </Link>
+          </div>
           <input
             type="file"
             id="lyricsFile"
@@ -152,8 +240,13 @@ const UploadModal = ({ isOpen, onClose }) => {
               file:bg-[var(--bg-app)] file:text-[var(--text-high-emphasis)] file:border file:border-[var(--border-subtle)]
               hover:file:bg-white/5 cursor-pointer
               bg-[rgba(11,17,34,0.3)] rounded-lg border border-[var(--border-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:border-[var(--color-gardens)] transition-all"
-            onChange={(e) => setLyricsFile(e.target.files[0])}
+            onChange={handleLyricsSelect}
           />
+          {lyricsError && (
+            <p className="mt-1.5 text-sm text-[var(--color-danger,theme(colors.red.500))]">
+              {lyricsError}
+            </p>
+          )}
         </div>
 
         {/* Category Dropdown */}
