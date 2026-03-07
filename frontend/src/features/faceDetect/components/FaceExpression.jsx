@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { detect, init } from "../utils/utils";
 import { Radar, ScanFace, VideoOff, Video } from "lucide-react";
 
-const FaceExpression = () => {
+const FaceExpression = ({ onExpressionDetect }) => {
   const videoRef = useRef(null);
   const landmarkerRef = useRef(null);
   const streamRef = useRef(null);
@@ -73,6 +73,21 @@ const FaceExpression = () => {
       }
     };
   }, [isCameraOn]);
+
+  useEffect(() => {
+    if (onExpressionDetect && expression) {
+      const expStr = expression.toLowerCase();
+      if (expStr.includes("happy")) {
+        onExpressionDetect("happy");
+      } else if (expStr.includes("surprise")) {
+        onExpressionDetect("surprise");
+      } else if (expStr.includes("sad")) {
+        onExpressionDetect("sad");
+      } else if (expStr.includes("neutral")) {
+        onExpressionDetect("neutral");
+      }
+    }
+  }, [expression, onExpressionDetect]);
 
   const toggleCamera = () => {
     setIsCameraOn((prev) => !prev);

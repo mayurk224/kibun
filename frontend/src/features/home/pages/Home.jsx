@@ -20,7 +20,14 @@ const Home = () => {
     error: lyricsError,
   } = useLyrics(currentSong?.lyricUrl, progress);
 
-  const [activeCategory, setActiveCategory] = useState("all");
+  const [activeCategory, setActiveCategory] = useState(() => {
+    const saved = localStorage.getItem("activeCategory");
+    return saved || "all";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("activeCategory", activeCategory);
+  }, [activeCategory]);
   const lyricsContainerRef = useRef(null);
   const activeLineRef = useRef(null);
 
@@ -147,7 +154,7 @@ const Home = () => {
               </div>
 
               <div className="flex justify-center md:justify-end h-full">
-                <FaceExpression />
+                <FaceExpression onExpressionDetect={setActiveCategory} />
               </div>
             </section>
 
