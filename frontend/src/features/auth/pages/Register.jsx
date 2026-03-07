@@ -171,7 +171,7 @@ const Register = () => {
                     htmlFor="username"
                     className="block text-sm font-medium text-(--text-muted)"
                   >
-                    Full Name
+                    Username
                   </label>
                   <input
                     type="text"
@@ -179,7 +179,7 @@ const Register = () => {
                     name="username"
                     value={formData.username}
                     onChange={handleChange}
-                    placeholder="Jane Doe"
+                    placeholder="john_doe"
                     className={`w-full bg-(--bg-surface) text-(--text-high-emphasis) border ${errors.username ? "border-red-500" : "border-(--border-subtle) focus:border-(--color-gardens)"} rounded transition-colors px-4 py-3 outline-none placeholder:text-(--text-muted) placeholder:opacity-50`}
                     disabled={isLoading}
                   />
