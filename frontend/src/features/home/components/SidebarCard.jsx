@@ -1,4 +1,3 @@
-import { Pause, Play } from "lucide-react";
 import React from "react";
 
 const SidebarCard = ({
@@ -13,22 +12,22 @@ const SidebarCard = ({
   return (
     <div
       onClick={onClick}
-      className={`group relative flex items-center w-full p-3 rounded-[4px] transition-all duration-200 cursor-pointer overflow-hidden ${
+      className={`group relative flex items-center w-full p-3 rounded-2xl transition-all duration-200 cursor-pointer overflow-hidden ${
         active
-          ? "bg-(--bg-surface) shadow-sm border border-(--btn-primary-bg)"
-          : "bg-transparent border border-transparent hover:bg-(--bg-surface) hover:border-(--border-subtle)"
+          ? "bg-(--surface-color) shadow-sm border border-white/10"
+          : "bg-transparent border border-transparent hover:bg-(--surface-color) hover:border-slate-200/5"
       }`}
     >
       {/* Active Indicator Bar (micro-interaction) */}
       <div
-        className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-(--btn-primary-bg) rounded-r-[2px] transition-all duration-300 ${
+        className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-(--primary-color) rounded-r-md transition-all duration-300 ${
           active ? "opacity-100" : "opacity-0 -translate-x-full"
         }`}
       ></div>
 
       <div className="flex items-center gap-4 w-full ml-1">
         {/* Image Placeholder with Hover Play Icon */}
-        <div className="relative h-12 w-12 shrink-0 bg-(--bg-surface) rounded-[2px] overflow-hidden transition-transform duration-300 group-hover:scale-105 group-active:scale-95 shadow-none">
+        <div className="relative h-12 w-12 shrink-0 bg-(--border-color) rounded-xl overflow-hidden transition-transform duration-300 group-hover:scale-105 group-active:scale-95 shadow-inner">
           {imageUrl && (
             <img
               src={imageUrl}
@@ -37,7 +36,7 @@ const SidebarCard = ({
             />
           )}
           <div
-            className={`absolute inset-0 bg-(--bg-app)/60 flex items-center justify-center transition-opacity duration-200 ${
+            className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity duration-200 ${
               active && isPlaying
                 ? "opacity-100"
                 : "opacity-0 group-hover:opacity-100"
@@ -45,10 +44,22 @@ const SidebarCard = ({
           >
             {active && isPlaying ? (
               // Pause Icon for playing state
-              <Pause className="w-5 h-5 text-(--text-high-emphasis) drop-shadow-none" />
+              <svg
+                className="w-5 h-5 text-(--primary-color) drop-shadow-md"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
             ) : (
               // Play Icon
-              <Play className="w-5 h-5 text-(--btn-primary-bg) translate-x-px drop-shadow-none" />
+              <svg
+                className="w-5 h-5 text-white translate-x-px drop-shadow-md"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
             )}
           </div>
         </div>
@@ -58,13 +69,13 @@ const SidebarCard = ({
           <h3
             className={`text-base font-semibold tracking-tight truncate transition-colors duration-200 ${
               active
-                ? "text-(--text-high-emphasis)"
-                : "text-(--text-high-emphasis) group-hover:text-(--btn-primary-bg)"
+                ? "text-(--text-color)"
+                : "text-(--text-color) group-hover:text-white"
             }`}
           >
             {title}
           </h3>
-          <p className="text-sm text-(--text-muted) truncate mt-0.5 font-medium transition-colors duration-200 group-hover:text-(--text-high-emphasis)">
+          <p className="text-sm text-(--text-muted) truncate mt-0.5 font-medium transition-colors duration-200 group-hover:text-gray-400">
             {artist}
           </p>
         </div>
@@ -74,8 +85,8 @@ const SidebarCard = ({
           <p
             className={`text-sm font-medium transition-colors duration-200 ${
               active
-                ? "text-(--btn-primary-bg)"
-                : "text-(--text-muted) group-hover:text-(--text-high-emphasis)"
+                ? "text-(--primary-color)"
+                : "text-(--text-muted) group-hover:text-gray-300"
             }`}
           >
             {duration}

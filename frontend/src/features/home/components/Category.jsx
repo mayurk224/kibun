@@ -24,12 +24,13 @@ const Category = ({
 
   return (
     <div className="w-full flex flex-col gap-10 py-6">
-      {/* Category Selection Area */}
-      <div className="flex flex-col gap-4">
-        <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest font-[var(--font-family-base)]">
-          Select Category
-        </h3>
+  {/* Category Selection Area */}
+  <div className="flex flex-col gap-4">
+    <h3 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">
+      Select Category
+    </h3>
 
+<<<<<<< HEAD
         <div className="flex flex-wrap items-center gap-2">
           {categories.map((cat) => {
             const isActive = activeCategory === cat.id;
@@ -47,17 +48,37 @@ const Category = ({
                 isActive
                   ? "bg-[--btn-primary-bg] text-[--btn-primary-text] shadow-md"
                   : "bg-transparent text-[--text-muted] border border-[--border-subtle] hover:bg-[--bg-surface] hover:text-[--text-high-emphasis] hover:border-[--btn-primary-bg]"
+=======
+    <div className="flex flex-wrap items-center gap-2">
+      {categories.map((cat) => {
+        const isActive = activeCategory === cat.id;
+        return (
+          <button
+            key={cat.id}
+            onClick={() => setActiveCategory(cat.id)}
+            // Added active:scale-95 for tactile feedback and focus-visible for accessibility
+            className={`
+              group flex items-center justify-center gap-2 px-4 py-2 rounded-full 
+              text-sm font-medium transition-all duration-200 
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black
+              active:scale-95
+              ${
+                isActive
+                  ? "bg-white text-black shadow-md"
+                  : "bg-transparent text-zinc-400 border border-zinc-800 hover:bg-white/10 hover:text-white hover:border-zinc-700"
+>>>>>>> parent of 37893cd (feat: Initialize frontend application with core UI components, home page, and face expression detection.)
               }
             `}
-                aria-pressed={isActive}
-              >
-                <span>{cat.emoji}</span>
-                <span className="capitalize">{cat.label}</span>
+            aria-pressed={isActive}
+          >
+            <span>{cat.emoji}</span>
+            <span className="capitalize">{cat.label}</span>
 
-                <span
-                  className={`flex items-center justify-center text-[10px] font-bold px-2 py-0.5 rounded-[2px] ml-1 transition-colors duration-200
+            <span
+              className={`flex items-center justify-center text-[10px] font-bold px-2 py-0.5 rounded-full ml-1 transition-colors duration-200
                 ${
                   isActive
+<<<<<<< HEAD
                     ? "bg-[--bg-app] text-[--text-high-emphasis]"
                     : "bg-[--bg-app] text-[--text-muted] group-hover:bg-[--bg-app] group-hover:text-[--text-high-emphasis]"
                 }
@@ -81,34 +102,55 @@ const Category = ({
               : "Top songs in "}
             <span className="capitalize text-[--text-high-emphasis] font-semibold">
               {activeCategory}
+=======
+                    ? "bg-zinc-200 text-black"
+                    : "bg-zinc-800 text-zinc-500 group-hover:bg-zinc-700 group-hover:text-zinc-300"
+                }
+              `}
+            >
+              {getCategoryCount(cat.id)}
+>>>>>>> parent of 37893cd (feat: Initialize frontend application with core UI components, home page, and face expression detection.)
             </span>
-          </h4>
-        </div>
-
-        {/* Responsive Grid with Empty State Handling */}
-        {filteredMusicList.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {filteredMusicList.slice(0, 5).map((item) => (
-              <CategoryCard
-                key={item._id}
-                active={currentSong?._id === item._id}
-                title={item.title}
-                artist={item.artist}
-                imageUrl={item.posterUrl}
-                onClick={() => playSong(item, filteredMusicList)}
-              />
-            ))}
-          </div>
-        ) : (
-          /* Graceful fallback if a category has 0 songs */
-          <div className="w-full py-12 flex flex-col items-center justify-center rounded-[4px] border border-dashed border-(--border-subtle) bg-(--bg-surface)">
-            <p className="text-(--text-muted) text-sm font-(--font-family-base)">
-              No songs found in this category.
-            </p>
-          </div>
-        )}
-      </div>
+          </button>
+        );
+      })}
     </div>
+  </div>
+
+  {/* Top Songs Area */}
+  <div className="flex flex-col gap-5">
+    <div className="flex items-center justify-between">
+      <h4 className="text-lg font-medium text-zinc-400 tracking-tight">
+        {/* Dynamic heading based on actual array length */}
+        {filteredMusicList.length >= 5 ? "Top 5 songs in " : "Top songs in "}
+        <span className="capitalize text-white font-semibold">
+          {activeCategory}
+        </span>
+      </h4>
+    </div>
+
+    {/* Responsive Grid with Empty State Handling */}
+    {filteredMusicList.length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        {filteredMusicList.slice(0, 5).map((item) => (
+          <CategoryCard
+            key={item._id}
+            active={currentSong?._id === item._id}
+            title={item.title}
+            artist={item.artist}
+            imageUrl={item.posterUrl}
+            onClick={() => playSong(item, filteredMusicList)}
+          />
+        ))}
+      </div>
+    ) : (
+      /* Graceful fallback if a category has 0 songs */
+      <div className="w-full py-12 flex flex-col items-center justify-center rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/30">
+        <p className="text-zinc-500 text-sm">No songs found in this category.</p>
+      </div>
+    )}
+  </div>
+</div>
   );
 };
 

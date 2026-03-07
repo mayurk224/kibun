@@ -94,10 +94,10 @@ const FaceExpression = ({ onExpressionDetect }) => {
   };
 
   return (
-    <div className="relative w-full max-w-sm aspect-4/3 rounded-[4px] overflow-hidden bg-(--bg-surface) border border-(--border-subtle) shadow-none">
+    <div className="relative w-full max-w-sm aspect-4/3 rounded-2xl overflow-hidden bg-[#141414] ring-1 ring-white/10 shadow-lg">
       {/* Fallback background if video is loading or off */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <VideoOff size={32} className="text-(--text-muted)" />
+        <VideoOff size={32} className="text-zinc-800" />
       </div>
 
       {/* Video Feed */}
@@ -113,7 +113,7 @@ const FaceExpression = ({ onExpressionDetect }) => {
       <div className="absolute top-3 right-3 z-20">
         <button
           onClick={toggleCamera}
-          className="flex items-center justify-center h-8 w-8 rounded-full bg-(--bg-app)/80 backdrop-blur-md text-(--text-muted) hover:text-(--text-high-emphasis) hover:bg-(--bg-app) border border-(--border-subtle) transition-all duration-200"
+          className="flex items-center justify-center h-8 w-8 rounded-full bg-black/40 backdrop-blur-md text-zinc-400 hover:text-white hover:bg-black/60 ring-1 ring-white/10 transition-all duration-200"
           aria-label="Toggle camera"
         >
           {isCameraOn ? <Video size={16} /> : <VideoOff size={16} />}
@@ -121,13 +121,13 @@ const FaceExpression = ({ onExpressionDetect }) => {
       </div>
 
       {/* Floating Bottom Console: Scanner & Results */}
-      <div className="absolute bottom-3 inset-x-3 z-20 flex items-center justify-between px-4 py-2.5 bg-(--bg-app)/80 backdrop-blur-md rounded-xl border border-(--border-subtle)">
+      <div className="absolute bottom-3 inset-x-3 z-20 flex items-center justify-between px-4 py-2.5 bg-black/40 backdrop-blur-md rounded-xl ring-1 ring-white/10">
         <div className="flex items-center gap-3">
-          <Radar className="text-(--text-muted) animate-pulse" size={16} />
+          <Radar className="text-zinc-400 animate-pulse" size={16} />
 
-          <h2 className="text-sm font-medium text-(--text-muted) tracking-wide">
+          <h2 className="text-sm font-medium text-zinc-300 tracking-wide">
             Looking{" "}
-            <span className="text-(--text-high-emphasis) font-semibold ml-1 capitalize">
+            <span className="text-white font-semibold ml-1 capitalize">
               {expression}
             </span>
           </h2>
@@ -136,7 +136,7 @@ const FaceExpression = ({ onExpressionDetect }) => {
         {/* Scan Action Button */}
         <button
           onClick={() => detect({ landmarkerRef, videoRef, setExpression })}
-          className="text-(--text-muted) hover:text-(--btn-primary-bg) transition-colors duration-200 group"
+          className="text-zinc-400 hover:text-white transition-colors duration-200 group"
           aria-label="Scan face"
         >
           <ScanFace
