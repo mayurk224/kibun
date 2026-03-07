@@ -4,10 +4,6 @@ const app = require("./src/app");
 
 const PORT = Number(process.env.PORT) || 3000;
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 connectToDb()
   .then(() => {
     app.listen(PORT, () => {
