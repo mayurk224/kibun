@@ -32,12 +32,12 @@ const VerifyEmail = () => {
         console.log(
           `Attempting verification (Attempt ${retryCount + 1}/${
             MAX_RETRIES + 1
-          })...`
+          })...`,
         );
         await handleVerifyEmail({ token });
         setStatus("success");
         setMessage(
-          "Email verified successfully! You can now login. Redirecting..."
+          "Email verified successfully! You can now login. Redirecting...",
         );
         setTimeout(() => {
           navigate("/login");
@@ -61,7 +61,7 @@ const VerifyEmail = () => {
         setStatus("error");
         setMessage(
           error.response?.data?.message ||
-            "Verification failed. The link may be invalid or expired."
+            "Verification failed. The link may be invalid or expired.",
         );
       }
     };
@@ -72,42 +72,45 @@ const VerifyEmail = () => {
   }, [token, handleVerifyEmail, retryCount]);
 
   return (
-    <main className="register-page">
-      <div className="register-container">
-        <div className="register-header">
-          <h1>Email Verification</h1>
-          {status === "verifying" && <p>Verifying your email...</p>}
+    <main className="min-h-screen flex items-center justify-center bg-[var(--bg-app)] text-[var(--text-high-emphasis)] p-4">
+      <div className="w-full max-w-md bg-[var(--bg-surface)] p-8 rounded-2xl shadow-2xl border border-[var(--border-subtle)] backdrop-blur-sm text-center">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold mb-2 tracking-tight">
+            Email Verification
+          </h1>
+          {status === "verifying" && (
+            <p className="text-[var(--text-muted)] mt-4">
+              Verifying your email...
+            </p>
+          )}
           {status === "success" && (
-            <div className="success-message">
-              <p>{message}</p>
+            <div className="mt-4">
+              <p className="text-[#22c55e]">{message}</p>
               <Link
                 to="/login"
-                className="submit-btn"
-                style={{
-                  marginTop: "1rem",
-                  display: "inline-block",
-                  textDecoration: "none",
-                }}
+                className="mt-6 inline-block w-full bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-semibold py-3 rounded-lg hover:bg-[var(--btn-primary-hover)] transition-all active:scale-[0.98]"
               >
                 Go to Login
               </Link>
             </div>
           )}
           {status === "error" && (
-            <div className="error-message">
-              <p style={{ color: "red" }}>{message}</p>
-              <Link
-                to="/resend-verify-email"
-                style={{ display: "block", marginTop: "1rem" }}
-              >
-                Resend Verification Email
-              </Link>
-              <Link
-                to="/login"
-                style={{ display: "block", marginTop: "0.5rem" }}
-              >
-                Back to Login
-              </Link>
+            <div className="mt-4">
+              <p className="text-red-400">{message}</p>
+              <div className="flex flex-col gap-3 mt-6">
+                <Link
+                  to="/resend-verify-email"
+                  className="inline-block w-full bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] font-semibold py-3 rounded-lg hover:bg-[var(--btn-primary-hover)] transition-all active:scale-[0.98]"
+                >
+                  Resend Verification Email
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-block w-full border border-[var(--border-subtle)] bg-transparent text-[var(--text-high-emphasis)] font-semibold py-3 rounded-lg hover:bg-[#1A1F2E] transition-all active:scale-[0.98]"
+                >
+                  Back to Login
+                </Link>
+              </div>
             </div>
           )}
         </div>

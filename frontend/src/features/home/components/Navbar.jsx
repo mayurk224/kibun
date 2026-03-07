@@ -4,17 +4,27 @@ const Navbar = ({ user, handleLogout }) => {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-[#1f1f1f] border-b border-[#3f3f46] px-6 py-3 sticky top-0 z-50 shadow-sm">
+    <nav className="w-full bg-[var(--bg-app)] border-b border-[var(--border-subtle)] px-6 py-3 sticky top-0 z-50 shadow-sm relative">
       <div className=" mx-auto flex items-center justify-between">
         {/* Brand */}
-        <div className="text-2xl font-bold cursor-pointer">Kibun</div>
+
+        <div className="flex items-center gap-3 cursor-pointer">
+          <img
+            src="/logo.png"
+            alt="Kibun Logo"
+            className="w-8 h-8 object-contain"
+          />
+          <span className="text-2xl font-bold tracking-tight text-[var(--text-high-emphasis)]">
+            Kibun
+          </span>
+        </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="relative">
             <button
               onClick={() => setIsUploadOpen(!isUploadOpen)}
-              className="flex items-center gap-2 px-4 py-2 bg-[#6366f1] hover:bg-[#4f46e5] text-white text-sm font-medium rounded-md transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
+              className="flex items-center gap-2 px-4 py-2 bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] text-[var(--btn-primary-text)] text-sm font-semibold rounded-md transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:ring-offset-2 focus:ring-offset-[var(--bg-app)]"
             >
               <svg
                 className="w-4 h-4"
@@ -39,24 +49,24 @@ const Navbar = ({ user, handleLogout }) => {
             />
           </div>
 
-          <div className="flex items-center pl-4 sm:pl-6 border-l border-[#3f3f46]">
+          <div className="flex items-center pl-4 sm:pl-6 border-l border-[var(--border-subtle)]">
             <div className="flex items-center mr-2 sm:mr-4 cursor-pointer group">
               <div className="relative mr-0 sm:mr-3">
                 <img
                   src={
                     user?.avatar ||
-                    `https://ui-avatars.com/api/?name=${user?.username || "User"}&background=2e2e2e&color=fff`
+                    `https://ui-avatars.com/api/?name=${user?.username || "User"}&background=0B1122&color=F1F1F1`
                   }
                   alt={user?.username}
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-transparent group-hover:border-[#6366f1] transition-all"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-[var(--bg-surface)] group-hover:border-[var(--color-gardens)] transition-all"
                 />
-                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#22c55e] border-2 border-[#1f1f1f] rounded-full"></div>
+                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[var(--color-gardens)] border-2 border-[var(--bg-app)] rounded-full"></div>
               </div>
               <div className="hidden sm:flex flex-col">
-                <div className="text-sm font-semibold text-[#ffffff] leading-tight group-hover:text-[#6366f1] transition-colors">
+                <div className="text-sm font-semibold text-[var(--text-high-emphasis)] leading-tight group-hover:text-[var(--color-gardens)] transition-colors">
                   {user?.username || "Guest"}
                 </div>
-                <div className="text-xs text-[#a1a1aa] leading-tight mt-0.5 max-w-[120px] truncate">
+                <div className="text-xs text-[var(--text-muted)] leading-tight mt-0.5 max-w-[120px] truncate">
                   {user?.email || "guest@example.com"}
                 </div>
               </div>
@@ -64,7 +74,7 @@ const Navbar = ({ user, handleLogout }) => {
 
             <button
               onClick={handleLogout}
-              className="p-2 text-[#a1a1aa] hover:text-[#ef4444] hover:bg-[#ef4444]/10 rounded-md transition-all focus:outline-none"
+              className="p-2 text-[var(--text-muted)] hover:text-red-400 hover:bg-red-400/10 rounded-md transition-all focus:outline-none"
               title="Logout"
             >
               <svg

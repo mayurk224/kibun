@@ -11,8 +11,10 @@ const CategoryCard = ({
   return (
     <div
       onClick={onClick}
-      className={`group flex items-center gap-3 p-2 rounded-md transition-colors duration-200 cursor-pointer focus-within:bg-white/5 focus-within:outline-none ${
-        active ? "bg-white/10" : "hover:bg-white/5"
+      className={`group flex items-center gap-4 p-3 rounded-xl transition-all duration-300 cursor-pointer focus-within:bg-[rgba(241,241,241,0.05)] focus-within:outline-none border ${
+        active
+          ? "bg-[rgba(241,241,241,0.05)] border-[var(--border-accent)] shadow-[0_4px_20px_rgba(0,0,0,0.2)]"
+          : "bg-[var(--bg-surface)] border-[var(--border-subtle)] hover:bg-[rgba(241,241,241,0.03)] hover:border-[var(--color-day)] hover:shadow-[0_4px_15px_rgba(0,0,0,0.1)]"
       }`}
       tabIndex={0}
       role="button"
@@ -24,32 +26,38 @@ const CategoryCard = ({
         }
       }}
     >
-      {/* Image Container: Removed borders, kept a subtle scale on the image itself */}
-      <div className="relative h-10 w-10 shrink-0 bg-[#2a2a2a] rounded overflow-hidden">
+      <div className="relative h-14 w-14 shrink-0 bg-[var(--bg-app)] rounded-lg overflow-hidden border border-[var(--border-subtle)] shadow-inner">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={`${title} cover`}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-[#2a2a2a] text-zinc-600">
-            <Music />
+          <div className="w-full h-full flex items-center justify-center bg-[var(--bg-app)] text-[var(--text-muted)]">
+            <Music size={20} />
           </div>
         )}
 
-        {/* Minimal Play Overlay: Stark white icon on a simple black tint, no bouncing colored circles */}
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <Play className="w-4 h-4 text-white ml-0.5" fill="currentColor" />
+        <div
+          className={`absolute inset-0 bg-[rgba(11,17,34,0.6)] backdrop-blur-[2px] flex items-center justify-center transition-opacity duration-300 ${active ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
+        >
+          <Play
+            className={`w-6 h-6 ml-1 transition-transform duration-300 ${active ? "text-[var(--color-gardens)] drop-shadow-[0_0_8px_var(--color-gardens)] scale-110" : "text-[var(--text-high-emphasis)] group-hover:scale-110"}`}
+            fill="currentColor"
+          />
         </div>
       </div>
 
-      {/* Text Content: Flatter typography hierarchy */}
-      <div className="flex-1 min-w-0">
-        <h3 className="text-sm font-medium text-zinc-200 truncate group-hover:text-white transition-colors duration-200">
+      <div className="flex-1 min-w-0 pr-2">
+        <h3
+          className={`text-base font-bold truncate transition-colors duration-200 tracking-tight ${active ? "text-[var(--color-gardens)]" : "text-[var(--text-high-emphasis)] group-hover:text-white"}`}
+        >
           {title}
         </h3>
-        <p className="text-xs text-zinc-500 truncate mt-0.5">{artist}</p>
+        <p className="text-sm text-[var(--text-muted)] truncate mt-0.5 font-medium transition-colors group-hover:text-[var(--text-high-emphasis)]">
+          {artist}
+        </p>
       </div>
     </div>
   );

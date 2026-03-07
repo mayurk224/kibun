@@ -72,13 +72,15 @@ const UploadModal = ({ isOpen, onClose }) => {
   return (
     <div
       ref={modalRef}
-      className="absolute top-full sm:right-0 -right-24 mt-3 w-[320px] bg-[#1f1f1f] border border-[#3f3f46] rounded-xl shadow-2xl shadow-black/50 z-50 p-5 animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute top-full sm:right-0 -right-24 mt-3 w-[320px] bg-[var(--bg-surface)] backdrop-blur-xl border border-[var(--border-subtle)] rounded-xl shadow-2xl z-50 p-5 animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="flex justify-between items-center mb-5">
-        <h3 className="text-white font-semibold text-lg">Upload Track</h3>
+        <h3 className="text-[var(--text-high-emphasis)] font-bold tracking-tight text-lg">
+          Upload Track
+        </h3>
         <button
           onClick={onClose}
-          className="p-1 rounded-md text-[#a1a1aa] hover:text-white hover:bg-[#3f3f46] transition-all focus:outline-none"
+          className="p-1 rounded-md text-[var(--text-muted)] hover:text-[var(--text-high-emphasis)] hover:bg-white/5 transition-all focus:outline-none"
         >
           <svg
             className="w-5 h-5"
@@ -109,23 +111,23 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Audio Input */}
         <div>
           <label
-            className="block text-sm font-medium text-[#e4e4e7] mb-1.5"
+            className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
             htmlFor="audioFile"
           >
             Audio File{" "}
-            <span className="text-[#a1a1aa] font-normal">(.mp3)</span>
+            <span className="text-[var(--text-muted)] font-normal">(.mp3)</span>
           </label>
           <input
             type="file"
             id="audioFile"
             accept=".mp3"
-            className="w-full text-sm text-[#a1a1aa]
+            className="w-full text-sm text-[var(--text-muted)]
               file:mr-4 file:py-2.5 file:px-4
               file:rounded-md file:border-0
               file:text-sm file:font-semibold
-              file:bg-[#3f3f46] file:text-white
-              hover:file:bg-[#52525b] cursor-pointer
-              bg-[#27272a] rounded-lg border border-[#3f3f46] focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all"
+              file:bg-[var(--bg-app)] file:text-[var(--text-high-emphasis)] file:border file:border-[var(--border-subtle)]
+              hover:file:bg-white/5 cursor-pointer
+              bg-[rgba(11,17,34,0.3)] rounded-lg border border-[var(--border-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:border-[var(--color-gardens)] transition-all"
             onChange={(e) => setAudioFile(e.target.files[0])}
           />
         </div>
@@ -133,23 +135,23 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Lyrics Input */}
         <div>
           <label
-            className="block text-sm font-medium text-[#e4e4e7] mb-1.5"
+            className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
             htmlFor="lyricsFile"
           >
             Lyrics File{" "}
-            <span className="text-[#a1a1aa] font-normal">(.lrc)</span>
+            <span className="text-[var(--text-muted)] font-normal">(.lrc)</span>
           </label>
           <input
             type="file"
             id="lyricsFile"
             accept=".lrc"
-            className="w-full text-sm text-[#a1a1aa]
+            className="w-full text-sm text-[var(--text-muted)]
               file:mr-4 file:py-2.5 file:px-4
               file:rounded-md file:border-0
               file:text-sm file:font-semibold
-              file:bg-[#3f3f46] file:text-white
-              hover:file:bg-[#52525b] cursor-pointer
-              bg-[#27272a] rounded-lg border border-[#3f3f46] focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all"
+              file:bg-[var(--bg-app)] file:text-[var(--text-high-emphasis)] file:border file:border-[var(--border-subtle)]
+              hover:file:bg-white/5 cursor-pointer
+              bg-[rgba(11,17,34,0.3)] rounded-lg border border-[var(--border-subtle)] focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:border-[var(--color-gardens)] transition-all"
             onChange={(e) => setLyricsFile(e.target.files[0])}
           />
         </div>
@@ -157,7 +159,7 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Category Dropdown */}
         <div>
           <label
-            className="block text-sm font-medium text-[#e4e4e7] mb-1.5"
+            className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
             htmlFor="category"
           >
             Category
@@ -167,7 +169,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-[#27272a] text-white text-sm border border-[#3f3f46] rounded-lg py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:border-[#6366f1] transition-all appearance-none cursor-pointer"
+              className="w-full bg-[rgba(11,17,34,0.3)] text-[var(--text-high-emphasis)] text-sm border border-[var(--border-subtle)] rounded-lg py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:border-[var(--color-gardens)] transition-all appearance-none cursor-pointer"
             >
               <option value="" disabled>
                 Select a category
@@ -177,7 +179,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               <option value="Surprise">Surprise</option>
               <option value="Neutral">Neutral</option>
             </select>
-            <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-[#a1a1aa]">
+            <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-[var(--text-muted)]">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -200,7 +202,7 @@ const UploadModal = ({ isOpen, onClose }) => {
         <button
           type="submit"
           disabled={isUploading}
-          className="w-full mt-6 py-2.5 bg-[#6366f1] hover:bg-[#4f46e5] disabled:bg-[#4f46e5]/50 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
+          className="w-full mt-6 py-2.5 bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--btn-primary-text)] text-sm font-bold rounded-lg transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:ring-offset-2 focus:ring-offset-[var(--bg-app)] active:scale-[0.98]"
         >
           {isUploading ? "Uploading..." : "Upload Track"}
         </button>

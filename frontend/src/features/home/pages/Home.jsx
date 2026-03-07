@@ -48,26 +48,28 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading...</p>
+      <div className="min-h-screen bg-[var(--bg-app)] flex items-center justify-center">
+        <div className="text-center flex flex-col items-center">
+          <div className="w-16 h-16 border-4 border-[var(--color-gardens)] border-t-transparent rounded-full animate-spin mb-6 shadow-[0_0_15px_var(--color-gardens)]"></div>
+          <p className="text-[var(--text-high-emphasis)] text-lg font-medium tracking-wide">
+            Loading Kibun...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden bg-[#1f1f1f] text-white">
+    <div className="w-full h-screen flex flex-col overflow-hidden bg-[var(--bg-app)] text-[var(--text-high-emphasis)]">
       {/* 1. Navbar stays pinned to the top */}
-      <div className="shrink-0">
+      <div className="shrink-0 relative z-50">
         <Navbar user={user} handleLogout={handleLogout} />
       </div>
 
       {/* 2. Flex-1 takes up all remaining vertical space under the Navbar */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative z-0">
         {/* 3. Sidebar gets exactly 25% width and doesn't shrink */}
-        <div className="w-1/4 min-w-[280px] max-w-[350px] h-full shrink-0">
+        <div className="w-1/4 min-w-[280px] max-w-[350px] h-full shrink-0 border-r border-[var(--border-subtle)] bg-[var(--bg-surface)] backdrop-blur-md z-10">
           <Sidebar
             musicList={
               activeCategory === "all"
@@ -142,7 +144,7 @@ const Home = () => {
                           // Enhanced the active state transition with slight scaling and opacity changes
                           className={`transition-all duration-300 mt-2 ${
                             isActive
-                              ? "text-2xl font-bold text-white active drop-shadow-md scale-100 opacity-100"
+                              ? "text-2xl font-bold text-[var(--color-gardens)] active drop-shadow-md scale-100 opacity-100"
                               : "text-xl font-medium text-gray-400 scale-95 opacity-50 hover:opacity-75 cursor-default"
                           }`}
                         >
@@ -153,12 +155,12 @@ const Home = () => {
                 </div>
               </div>
 
-              <div className="flex justify-center md:justify-end h-full">
+              <div className="flex justify-center xl:justify-end h-full w-full xl:w-auto shrink-0">
                 <FaceExpression onExpressionDetect={setActiveCategory} />
               </div>
             </section>
 
-            <section>
+            <section className="relative z-10">
               <Category
                 musicList={musicList}
                 activeCategory={activeCategory}
@@ -177,7 +179,7 @@ const Home = () => {
           </main>
 
           {/* 5. Footer stays at the bottom of the scrolling content */}
-          <div className="shrink-0 mt-auto">
+          <div className="shrink-0 mt-auto sticky bottom-0 z-40 bg-[var(--bg-surface)] backdrop-blur-xl border-t border-[var(--border-subtle)] shadow-[0_-10px_30px_-10px_rgba(0,0,0,0.5)]">
             <Footer />
           </div>
         </div>
