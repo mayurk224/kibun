@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* Import a modern, geometric font to match the tech vibe, like Space Grotesk or keep Inter */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 :root {
   /* --- Base Color Tokens --- */
   --color-gardens: #C1E45C;

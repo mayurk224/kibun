@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CategoryCard from "./CategoryCard";
 import { usePlayer } from "../../../context/PlayerContext";
+import { Music } from "lucide-react";
 
 const categories = [
   { id: "all", label: "All", count: 5, emoji: "🎵" },
@@ -100,7 +101,7 @@ const Category = ({
         ) : (
           <div className="w-full flex items-center justify-center rounded-3xl border border-dashed border-[var(--border-subtle)] bg-[var(--bg-surface)] p-3 gap-5">
             <div className="w-16 h-16 rounded-full bg-[rgba(241,241,241,0.03)] flex items-center justify-center">
-              <span className="text-2xl opacity-50">🎵</span>
+              <span className="text-2xl opacity-50"><Music/></span>
             </div>
             <div className="flex flex-col">
               <p className="text-[var(--text-high-emphasis)] font-medium text-lg">

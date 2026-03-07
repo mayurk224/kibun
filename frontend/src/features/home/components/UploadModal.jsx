@@ -72,7 +72,7 @@ const UploadModal = ({ isOpen, onClose }) => {
   return (
     <div
       ref={modalRef}
-      className="absolute top-full sm:right-0 -right-24 mt-3 w-[320px] bg-[var(--bg-surface)] backdrop-blur-xl border border-[var(--border-subtle)] rounded-xl shadow-2xl z-50 p-5 animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute top-full sm:right-0 -right-24 mt-3.5 w-[320px] bg-[var(--bg-app)] backdrop-blur-xl border border-[var(--border-subtle)] rounded-xl shadow-2xl z-50 p-5 animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="flex justify-between items-center mb-5">
         <h3 className="text-[var(--text-high-emphasis)] font-bold tracking-tight text-lg">
@@ -169,7 +169,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-[rgba(11,17,34,0.3)] text-[var(--text-high-emphasis)] text-sm border border-[var(--border-subtle)] rounded-lg py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:border-[var(--color-gardens)] transition-all appearance-none cursor-pointer"
+              className="w-full bg-[rgb(11,17,34)] text-[var(--text-high-emphasis)] text-sm border border-[var(--border-subtle)] rounded-lg py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:border-[var(--color-gardens)] transition-all appearance-none cursor-pointer"
             >
               <option value="" disabled>
                 Select a category
