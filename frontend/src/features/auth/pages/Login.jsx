@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import "../styles/login.scss";
 import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
-  const {
-    handleLogin,
-    isLoading,
-    isAuthenticated,
-    errors: authErrors,
-  } = useAuth();
+  const { handleLogin, isLoading, isAuthenticated, errors: authErrors } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,7 +60,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!validateForm()) return;
 
     try {
@@ -82,38 +78,25 @@ const Login = () => {
   };
 
   return (
-    <main className="min-h-screen bg-(--bg-app) flex items-center justify-center p-6 text-(--text-high-emphasis) font-sans pt-24 pb-12">
-      <div className="w-full max-w-md bg-(--bg-surface) p-8 rounded-2xl border border-(--border-subtle) shadow-xl relative overflow-hidden backdrop-blur-sm">
-        {/* Decorative background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-32 bg-(--color-gardens) opacity-[0.03] blur-[60px] pointer-events-none"></div>
-
-        <div className="text-center mb-8 relative">
-          <h1 className="text-3xl font-bold mb-2 text-(--text-high-emphasis)">
-            Welcome Back
-          </h1>
-          <p className="text-(--text-muted) text-sm">
-            Please enter your details to sign in
-          </p>
+    <main className="login-page">
+      <div className="login-container">
+        <div className="login-header">
+          <h1>Welcome Back</h1>
+          <p>Please enter your details to sign in</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5 relative" noValidate>
+        <form onSubmit={handleSubmit} className="login-form" noValidate>
           {errors.form && (
-            <div
-              className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm"
-              role="alert"
-            >
+            <div className="form-error-message" role="alert">
               {errors.form}
             </div>
           )}
 
-          <div className="space-y-2">
-            <label
-              htmlFor="identifier"
-              className="block text-sm font-medium text-(--text-high-emphasis)"
+          <div className="form-group">
+            <label htmlFor="identifier">Identifier</label>
+            <div
+              className={`input-wrapper ${errors.identifier ? "error" : ""}`}
             >
-              Identifier
-            </label>
-            <div className="relative">
               <input
                 type="text"
                 id="identifier"
@@ -121,11 +104,6 @@ const Login = () => {
                 value={formData.identifier}
                 onChange={handleChange}
                 placeholder="Enter your identifier"
-                className={`w-full bg-[rgba(241,241,241,0.03)] border rounded-lg px-4 py-3 text-(--text-high-emphasis) placeholder:text-(--text-muted)/50 focus:outline-none focus:ring-1 transition-colors disabled:opacity-50 ${
-                  errors.identifier
-                    ? "border-red-500/50 focus:border-red-500 focus:ring-red-500"
-                    : "border-(--border-subtle) focus:border-(--color-gardens) focus:ring-(--color-gardens)"
-                }`}
                 aria-invalid={!!errors.identifier}
                 aria-describedby={
                   errors.identifier ? "identifier-error" : undefined
@@ -133,33 +111,21 @@ const Login = () => {
                 disabled={isLoading}
               />
               {errors.identifier && (
-                <span
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-red-400 font-bold select-none"
-                  aria-hidden="true"
-                >
+                <span className="error-icon" aria-hidden="true">
                   !
                 </span>
               )}
             </div>
             {errors.identifier && (
-              <span
-                id="identifier-error"
-                className="block text-sm text-red-400 mt-1"
-                role="alert"
-              >
+              <span id="identifier-error" className="error-text" role="alert">
                 {errors.identifier}
               </span>
             )}
           </div>
 
-          <div className="space-y-2">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-(--text-high-emphasis)"
-            >
-              Password
-            </label>
-            <div className="relative">
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <div className={`input-wrapper ${errors.password ? "error" : ""}`}>
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
@@ -167,11 +133,6 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
-                className={`w-full bg-[rgba(241,241,241,0.03)] border rounded-lg pl-4 pr-12 py-3 text-(--text-high-emphasis) placeholder:text-(--text-muted)/50 focus:outline-none focus:ring-1 transition-colors disabled:opacity-50 ${
-                  errors.password
-                    ? "border-red-500/50 focus:border-red-500 focus:ring-red-500"
-                    : "border-(--border-subtle) focus:border-(--color-gardens) focus:ring-(--color-gardens)"
-                }`}
                 aria-invalid={!!errors.password}
                 aria-describedby={
                   errors.password ? "password-error" : undefined
@@ -180,7 +141,7 @@ const Login = () => {
               />
               <button
                 type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-(--text-muted) hover:text-(--text-high-emphasis) transition-colors disabled:opacity-50 p-1"
+                className="password-toggle"
                 onClick={togglePasswordVisibility}
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 disabled={isLoading}
@@ -219,56 +180,39 @@ const Login = () => {
               </button>
             </div>
             {errors.password && (
-              <span
-                id="password-error"
-                className="block text-sm text-red-400 mt-1"
-                role="alert"
-              >
+              <span id="password-error" className="error-text" role="alert">
                 {errors.password}
               </span>
             )}
           </div>
 
-          <div className="flex items-center justify-between text-sm mt-6">
-            <label className="flex items-center gap-2 cursor-pointer text-(--text-muted) hover:text-(--text-high-emphasis) transition-colors">
+          <div className="form-actions">
+            <label className="checkbox-container">
               <input
                 type="checkbox"
                 name="rememberMe"
                 checked={formData.rememberMe}
                 onChange={handleChange}
                 disabled={isLoading}
-                className="w-4 h-4 rounded border-(--border-subtle) bg-[rgba(241,241,241,0.03)] text-(--color-gardens) focus:ring-(--color-gardens) focus:ring-offset-0 disabled:opacity-50"
               />
-              <span>Remember me</span>
+              <span className="checkmark"></span>
+              Remember me
             </label>
-            <Link
-              to="/forgot-password"
-              className="text-(--color-gardens) hover:underline font-medium"
-            >
+            <Link to="/forgot-password" className="forgot-password">
               Forgot Password?
             </Link>
           </div>
 
           <button
             type="submit"
-            className="w-full mt-6 bg-(--btn-primary-bg) text-(--btn-primary-text) font-semibold py-3 px-4 rounded-lg hover:bg-(--btn-primary-hover) transition-all disabled:opacity-70 flex justify-center items-center h-[52px]"
+            className={`submit-btn ${isLoading ? "loading" : ""}`}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <div className="w-5 h-5 border-2 border-(--btn-primary-text) border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              "Sign In"
-            )}
+            {isLoading ? <span className="loader"></span> : "Sign In"}
           </button>
 
-          <p className="text-center text-sm text-(--text-muted) mt-6">
-            Don't have an account?{" "}
-            <Link
-              to="/register"
-              className="text-(--color-gardens) hover:underline font-medium"
-            >
-              Sign up
-            </Link>
+          <p className="register-link">
+            Don't have an account? <Link to="/register">Sign up</Link>
           </p>
         </form>
       </div>
