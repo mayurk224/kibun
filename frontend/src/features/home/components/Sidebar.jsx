@@ -13,12 +13,12 @@ const Sidebar = ({ musicList = [] }) => {
   };
 
   return (
-    <aside className="flex flex-col h-full w-full p-4 bg-[var(--bg-app)] border-r border-[var(--border-subtle)]">
+    <aside className="flex flex-col h-full w-full p-4 bg-[--bg-app] border-r border-[--border-subtle]">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold tracking-tight text-[var(--text-high-emphasis)] mb-2">
+        <h2 className="text-2xl font-bold tracking-tight text-[--text-high-emphasis] mb-2">
           Playlist
         </h2>
-        <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+        <p className="text-sm text-[--text-muted] leading-relaxed">
           Your category playlist will be displayed here.
         </p>
       </div>
@@ -40,10 +40,10 @@ const Sidebar = ({ musicList = [] }) => {
         ) : (
           /* Enhanced Empty State - Softly centered with better typography */
           <div className="flex flex-col items-center justify-center h-full py-12 text-center opacity-80 select-none">
-            <p className="text-sm font-medium text-[var(--text-high-emphasis)]">
+            <p className="text-sm font-medium text-[--text-high-emphasis]">
               It's quiet in here
             </p>
-            <p className="text-xs text-[var(--text-muted)] mt-1">
+            <p className="text-xs text-[--text-muted] mt-1">
               No songs found in this playlist.
             </p>
           </div>

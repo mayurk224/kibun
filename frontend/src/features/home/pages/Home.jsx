@@ -48,10 +48,10 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-high-emphasis)] flex items-center justify-center">
+      <div className="min-h-screen bg-[--bg-app] text-[--text-high-emphasis] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-[var(--btn-primary-bg)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[var(--text-high-emphasis)] text-lg font-medium">
+          <div className="w-16 h-16 border-4 border-[--btn-primary-bg] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[--text-high-emphasis] text-lg font-medium">
             Loading...
           </p>
         </div>
@@ -60,7 +60,7 @@ const Home = () => {
   }
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden bg-[var(--bg-app)] text-[var(--text-high-emphasis)]">
+    <div className="w-full h-screen flex flex-col overflow-hidden bg-[--bg-app] text-[--text-high-emphasis]">
       {/* 1. Navbar stays pinned to the top */}
       <div className="shrink-0">
         <Navbar user={user} handleLogout={handleLogout} />
@@ -119,7 +119,7 @@ const Home = () => {
                   }}
                 >
                   {lyricsLoading && (
-                    <p className="text-[var(--text-muted)] mt-auto mb-auto text-center animate-pulse">
+                    <p className="text-[--text-muted] mt-auto mb-auto text-center animate-pulse">
                       Loading lyrics...
                     </p>
                   )}
@@ -129,7 +129,7 @@ const Home = () => {
                     </p>
                   )}
                   {!lyricsLoading && !lyricsError && lyrics.length === 0 && (
-                    <p className="text-[var(--text-muted)] mt-auto mb-auto text-center italic">
+                    <p className="text-[--text-muted] mt-auto mb-auto text-center italic">
                       No lyrics available
                     </p>
                   )}
@@ -144,8 +144,8 @@ const Home = () => {
                           // Enhanced the active state transition with slight scaling and opacity changes
                           className={`transition-all duration-300 mt-2 ${
                             isActive
-                              ? "text-2xl font-bold text-[var(--text-high-emphasis)] active drop-shadow-none scale-100 opacity-100"
-                              : "text-xl font-medium text-[var(--text-muted)] scale-95 opacity-50 hover:opacity-75 cursor-default"
+                              ? "text-2xl font-bold text-[--text-high-emphasis] active drop-shadow-none scale-100 opacity-100"
+                              : "text-xl font-medium text-[--text-muted] scale-95 opacity-50 hover:opacity-75 cursor-default"
                           }`}
                         >
                           {line.text}

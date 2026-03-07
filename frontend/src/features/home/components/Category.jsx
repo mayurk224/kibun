@@ -40,13 +40,13 @@ const Category = ({
                 // Added active:scale-95 for tactile feedback and focus-visible for accessibility
                 className={`
               group flex items-center justify-center gap-2 px-4 py-2 rounded-[4px] 
-              text-sm font-medium transition-all duration-200 font-[var(--font-family-base)]
-              focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--btn-primary-bg)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-app)]
+              text-sm font-medium transition-all duration-200 font-[--font-family-base]
+              focus:outline-none focus-visible:ring-2 focus-visible:ring-[--btn-primary-bg]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[--bg-app]
               active:scale-95
               ${
                 isActive
-                  ? "bg-[var(--btn-primary-bg)] text-[var(--btn-primary-text)] shadow-md"
-                  : "bg-transparent text-[var(--text-muted)] border border-[var(--border-subtle)] hover:bg-[var(--bg-surface)] hover:text-[var(--text-high-emphasis)] hover:border-[var(--btn-primary-bg)]"
+                  ? "bg-[--btn-primary-bg] text-[--btn-primary-text] shadow-md"
+                  : "bg-transparent text-[--text-muted] border border-[--border-subtle] hover:bg-[--bg-surface] hover:text-[--text-high-emphasis] hover:border-[--btn-primary-bg]"
               }
             `}
                 aria-pressed={isActive}
@@ -58,8 +58,8 @@ const Category = ({
                   className={`flex items-center justify-center text-[10px] font-bold px-2 py-0.5 rounded-[2px] ml-1 transition-colors duration-200
                 ${
                   isActive
-                    ? "bg-[var(--bg-app)] text-[var(--text-high-emphasis)]"
-                    : "bg-[var(--bg-app)] text-[var(--text-muted)] group-hover:bg-[var(--bg-app)] group-hover:text-[var(--text-high-emphasis)]"
+                    ? "bg-[--bg-app] text-[--text-high-emphasis]"
+                    : "bg-[--bg-app] text-[--text-muted] group-hover:bg-[--bg-app] group-hover:text-[--text-high-emphasis]"
                 }
               `}
                 >
@@ -74,12 +74,12 @@ const Category = ({
       {/* Top Songs Area */}
       <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
-          <h4 className="text-lg font-medium text-[var(--text-muted)] tracking-tight">
+          <h4 className="text-lg font-medium text-[--text-muted] tracking-tight">
             {/* Dynamic heading based on actual array length */}
             {filteredMusicList.length >= 5
               ? "Top 5 songs in "
               : "Top songs in "}
-            <span className="capitalize text-[var(--text-high-emphasis)] font-semibold">
+            <span className="capitalize text-[--text-high-emphasis] font-semibold">
               {activeCategory}
             </span>
           </h4>

@@ -72,15 +72,15 @@ const UploadModal = ({ isOpen, onClose }) => {
   return (
     <div
       ref={modalRef}
-      className="absolute top-full sm:right-0 -right-24 mt-3 w-[320px] bg-[var(--bg-app)] border border-[var(--border-subtle)] rounded-[4px] shadow-2xl shadow-black/50 z-50 p-5 animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute top-full sm:right-0 -right-24 mt-3 w-[320px] bg-[--bg-app] border border-[--border-subtle] rounded-[4px] shadow-2xl shadow-black/50 z-50 p-5 animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="flex justify-between items-center mb-5">
-        <h3 className="text-[var(--text-high-emphasis)] font-semibold text-lg">
+        <h3 className="text-[--text-high-emphasis] font-semibold text-lg">
           Upload Track
         </h3>
         <button
           onClick={onClose}
-          className="p-1 rounded-[4px] text-[var(--text-muted)] hover:text-[var(--text-high-emphasis)] hover:bg-[var(--bg-app)] transition-all focus:outline-none"
+          className="p-1 rounded-[4px] text-[--text-muted] hover:text-[--text-high-emphasis] hover:bg-[--bg-app] transition-all focus:outline-none"
         >
           <svg
             className="w-5 h-5"
@@ -102,7 +102,7 @@ const UploadModal = ({ isOpen, onClose }) => {
       <form className="space-y-4" onSubmit={handleSubmit}>
         {message.text && (
           <div
-            className={`p-3 rounded-lg text-sm bg-[var(--bg-surface)] text-[var(--text-high-emphasis)] border border-[var(--border-accent)]`}
+            className={`p-3 rounded-lg text-sm bg-[--bg-surface] text-[--text-high-emphasis] border border-[--border-accent]`}
           >
             {message.text}
           </div>
@@ -111,23 +111,23 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Audio Input */}
         <div>
           <label
-            className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
+            className="block text-sm font-medium text-[--text-high-emphasis] mb-1.5"
             htmlFor="audioFile"
           >
             Audio File{" "}
-            <span className="text-[var(--text-muted)] font-normal">(.mp3)</span>
+            <span className="text-[--text-muted] font-normal">(.mp3)</span>
           </label>
           <input
             type="file"
             id="audioFile"
             accept=".mp3"
-            className="w-full text-sm text-[var(--text-muted)]
+            className="w-full text-sm text-[--text-muted]
               file:mr-4 file:py-2.5 file:px-4
               file:rounded-[4px] file:border-0
               file:text-sm file:font-semibold
-              file:bg-[var(--bg-app)] file:text-[var(--text-high-emphasis)]
-              hover:file:text-[var(--btn-primary-bg)] cursor-pointer
-              bg-[var(--bg-app)] rounded-[4px] border border-[var(--border-subtle)] focus:outline-none focus:ring-1 focus:ring-[var(--btn-primary-bg)] focus:border-[var(--btn-primary-bg)] transition-all"
+              file:bg-[--bg-app] file:text-[--text-high-emphasis]
+              hover:file:text-[--btn-primary-bg] cursor-pointer
+              bg-[--bg-app] rounded-[4px] border border-[--border-subtle] focus:outline-none focus:ring-1 focus:ring-[--btn-primary-bg] focus:border-[--btn-primary-bg] transition-all"
             onChange={(e) => setAudioFile(e.target.files[0])}
           />
         </div>
@@ -135,23 +135,23 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Lyrics Input */}
         <div>
           <label
-            className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
+            className="block text-sm font-medium text-[--text-high-emphasis] mb-1.5"
             htmlFor="lyricsFile"
           >
             Lyrics File{" "}
-            <span className="text-[var(--text-muted)] font-normal">(.lrc)</span>
+            <span className="text-[--text-muted] font-normal">(.lrc)</span>
           </label>
           <input
             type="file"
             id="lyricsFile"
             accept=".lrc"
-            className="w-full text-sm text-[var(--text-muted)]
+            className="w-full text-sm text-[--text-muted]
               file:mr-4 file:py-2.5 file:px-4
               file:rounded-[4px] file:border-0
               file:text-sm file:font-semibold
-              file:bg-[var(--bg-app)] file:text-[var(--text-high-emphasis)]
-              hover:file:text-[var(--btn-primary-bg)] cursor-pointer
-              bg-[var(--bg-app)] rounded-[4px] border border-[var(--border-subtle)] focus:outline-none focus:ring-1 focus:ring-[var(--btn-primary-bg)] focus:border-[var(--btn-primary-bg)] transition-all"
+              file:bg-[--bg-app] file:text-[--text-high-emphasis]
+              hover:file:text-[--btn-primary-bg] cursor-pointer
+              bg-[--bg-app] rounded-[4px] border border-[--border-subtle] focus:outline-none focus:ring-1 focus:ring-[--btn-primary-bg] focus:border-[--btn-primary-bg] transition-all"
             onChange={(e) => setLyricsFile(e.target.files[0])}
           />
         </div>
@@ -159,7 +159,7 @@ const UploadModal = ({ isOpen, onClose }) => {
         {/* Category Dropdown */}
         <div>
           <label
-            className="block text-sm font-medium text-[var(--text-high-emphasis)] mb-1.5"
+            className="block text-sm font-medium text-[--text-high-emphasis] mb-1.5"
             htmlFor="category"
           >
             Category
@@ -169,7 +169,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               id="category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-[var(--bg-app)] text-[var(--text-high-emphasis)] text-sm border border-[var(--border-subtle)] rounded-[4px] py-2.5 px-3 focus:outline-none focus:ring-1 focus:ring-[var(--btn-primary-bg)] focus:border-[var(--btn-primary-bg)] transition-all appearance-none cursor-pointer"
+              className="w-full bg-[--bg-app] text-[--text-high-emphasis] text-sm border border-[--border-subtle] rounded-[4px] py-2.5 px-3 focus:outline-none focus:ring-1 focus:ring-[--btn-primary-bg] focus:border-[--btn-primary-bg] transition-all appearance-none cursor-pointer"
             >
               <option value="" disabled>
                 Select a category
@@ -179,7 +179,7 @@ const UploadModal = ({ isOpen, onClose }) => {
               <option value="Surprise">Surprise</option>
               <option value="Neutral">Neutral</option>
             </select>
-            <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-[var(--text-muted)]">
+            <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-[--text-muted]">
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -202,7 +202,7 @@ const UploadModal = ({ isOpen, onClose }) => {
         <button
           type="submit"
           disabled={isUploading}
-          className="w-full mt-6 py-2.5 bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] disabled:opacity-50 disabled:cursor-not-allowed text-[var(--btn-primary-text)] text-sm font-semibold rounded-[4px] transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--btn-primary-bg)]/50 focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)]"
+          className="w-full mt-6 py-2.5 bg-[--btn-primary-bg] hover:bg-[--btn-primary-hover] disabled:opacity-50 disabled:cursor-not-allowed text-[--btn-primary-text] text-sm font-semibold rounded-[4px] transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[--btn-primary-bg]/50 focus:ring-offset-2 focus:ring-offset-[--bg-surface]"
         >
           {isUploading ? "Uploading..." : "Upload Track"}
         </button>
