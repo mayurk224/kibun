@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/register.scss";
 import { useAuth } from "../hooks/useAuth";
 import { validateRegistrationForm } from "../utils/validation";
 
@@ -81,20 +80,19 @@ const Register = () => {
 
   if (isSuccess) {
     return (
-      <main className="register-page">
-        <div className="register-container">
-          <div className="register-header">
-            <h1>Registration Successful!</h1>
-            <p>Please check your email to verify your account.</p>
-          </div>
-          <div
-            className="success-actions"
-            style={{ textAlign: "center", marginTop: "2rem" }}
-          >
+      <main className="min-h-screen bg-(--bg-app) flex items-center justify-center p-6 text-(--text-high-emphasis)">
+        <div className="w-full max-w-md bg-(--bg-surface) p-8 rounded-2xl border border-(--border-subtle) shadow-xl relative overflow-hidden backdrop-blur-sm text-center">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-32 bg-(--color-gardens) opacity-[0.03] blur-[60px] pointer-events-none"></div>
+          <h1 className="text-3xl font-bold mb-2 text-(--text-high-emphasis)">
+            Registration Successful!
+          </h1>
+          <p className="text-(--text-muted) text-sm mb-8">
+            Please check your email to verify your account.
+          </p>
+          <div className="flex justify-center">
             <Link
               to="/login"
-              className="submit-btn"
-              style={{ display: "inline-block", textDecoration: "none" }}
+              className="inline-flex justify-center items-center bg-(--btn-primary-bg) text-(--btn-primary-text) font-semibold py-3 px-8 rounded-lg hover:bg-(--btn-primary-hover) transition-all h-[52px]"
             >
               Go to Login
             </Link>
@@ -105,23 +103,38 @@ const Register = () => {
   }
 
   return (
-    <main className="register-page">
-      <div className="register-container">
-        <div className="register-header">
-          <h1>Create Account</h1>
-          <p>Join us today and get started</p>
+    <main className="min-h-screen bg-(--bg-app) flex items-center justify-center p-6 text-(--text-high-emphasis)">
+      <div className="w-full max-w-md bg-(--bg-surface) p-8 rounded-2xl border border-(--border-subtle) shadow-xl relative overflow-hidden backdrop-blur-sm">
+        {/* Decorative background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[150%] h-32 bg-(--color-gardens) opacity-[0.03] blur-[60px] pointer-events-none"></div>
+
+        <div className="text-center mb-8 relative">
+          <h1 className="text-3xl font-bold mb-2 text-(--text-high-emphasis)">
+            Create Account
+          </h1>
+          <p className="text-(--text-muted) text-sm">
+            Join us today and get started
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="register-form" noValidate>
+        <form onSubmit={handleSubmit} className="space-y-4 relative" noValidate>
           {errors.form && (
-            <div className="form-error-message" role="alert">
+            <div
+              className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm"
+              role="alert"
+            >
               {errors.form}
             </div>
           )}
 
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <div className={`input-wrapper ${errors.username ? "error" : ""}`}>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-(--text-high-emphasis)"
+            >
+              Username
+            </label>
+            <div className="relative">
               <input
                 type="text"
                 id="username"
@@ -129,6 +142,11 @@ const Register = () => {
                 value={formData.username}
                 onChange={handleChange}
                 placeholder="Choose a username"
+                className={`w-full bg-[rgba(241,241,241,0.03)] border rounded-lg px-4 py-3 text-(--text-high-emphasis) placeholder:text-(--text-muted)/50 focus:outline-none focus:ring-1 transition-colors disabled:opacity-50 ${
+                  errors.username
+                    ? "border-red-500/50 focus:border-red-500 focus:ring-red-500"
+                    : "border-(--border-subtle) focus:border-(--color-gardens) focus:ring-(--color-gardens)"
+                }`}
                 aria-invalid={!!errors.username}
                 aria-describedby={
                   errors.username ? "username-error" : undefined
@@ -136,21 +154,33 @@ const Register = () => {
                 disabled={isLoading}
               />
               {errors.username && (
-                <span className="error-icon" aria-hidden="true">
+                <span
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-red-400 font-bold select-none"
+                  aria-hidden="true"
+                >
                   !
                 </span>
               )}
             </div>
             {errors.username && (
-              <span id="username-error" className="error-text" role="alert">
+              <span
+                id="username-error"
+                className="block text-sm text-red-400 mt-1"
+                role="alert"
+              >
                 {errors.username}
               </span>
             )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <div className={`input-wrapper ${errors.email ? "error" : ""}`}>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-(--text-high-emphasis)"
+            >
+              Email
+            </label>
+            <div className="relative">
               <input
                 type="email"
                 id="email"
@@ -158,26 +188,43 @@ const Register = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
+                className={`w-full bg-[rgba(241,241,241,0.03)] border rounded-lg px-4 py-3 text-(--text-high-emphasis) placeholder:text-(--text-muted)/50 focus:outline-none focus:ring-1 transition-colors disabled:opacity-50 ${
+                  errors.email
+                    ? "border-red-500/50 focus:border-red-500 focus:ring-red-500"
+                    : "border-(--border-subtle) focus:border-(--color-gardens) focus:ring-(--color-gardens)"
+                }`}
                 aria-invalid={!!errors.email}
                 aria-describedby={errors.email ? "email-error" : undefined}
                 disabled={isLoading}
               />
               {errors.email && (
-                <span className="error-icon" aria-hidden="true">
+                <span
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-red-400 font-bold select-none"
+                  aria-hidden="true"
+                >
                   !
                 </span>
               )}
             </div>
             {errors.email && (
-              <span id="email-error" className="error-text" role="alert">
+              <span
+                id="email-error"
+                className="block text-sm text-red-400 mt-1"
+                role="alert"
+              >
                 {errors.email}
               </span>
             )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <div className={`input-wrapper ${errors.password ? "error" : ""}`}>
+          <div className="space-y-1.5">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-(--text-high-emphasis)"
+            >
+              Password
+            </label>
+            <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
@@ -185,6 +232,11 @@ const Register = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Create a password"
+                className={`w-full bg-[rgba(241,241,241,0.03)] border rounded-lg pl-4 pr-12 py-3 text-(--text-high-emphasis) placeholder:text-(--text-muted)/50 focus:outline-none focus:ring-1 transition-colors disabled:opacity-50 ${
+                  errors.password
+                    ? "border-red-500/50 focus:border-red-500 focus:ring-red-500"
+                    : "border-(--border-subtle) focus:border-(--color-gardens) focus:ring-(--color-gardens)"
+                }`}
                 aria-invalid={!!errors.password}
                 aria-describedby={
                   errors.password ? "password-error" : undefined
@@ -193,7 +245,7 @@ const Register = () => {
               />
               <button
                 type="button"
-                className="password-toggle"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-(--text-muted) hover:text-(--text-high-emphasis) transition-colors disabled:opacity-50 p-1"
                 onClick={togglePasswordVisibility}
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 disabled={isLoading}
@@ -232,19 +284,24 @@ const Register = () => {
               </button>
             </div>
             {errors.password && (
-              <span id="password-error" className="error-text" role="alert">
+              <span
+                id="password-error"
+                className="block text-sm text-red-400 mt-1"
+                role="alert"
+              >
                 {errors.password}
               </span>
             )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <div
-              className={`input-wrapper ${
-                errors.confirmPassword ? "error" : ""
-              }`}
+          <div className="space-y-1.5">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-(--text-high-emphasis)"
             >
+              Confirm Password
+            </label>
+            <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
@@ -252,6 +309,11 @@ const Register = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirm your password"
+                className={`w-full bg-[rgba(241,241,241,0.03)] border rounded-lg pl-4 pr-12 py-3 text-(--text-high-emphasis) placeholder:text-(--text-muted)/50 focus:outline-none focus:ring-1 transition-colors disabled:opacity-50 ${
+                  errors.confirmPassword
+                    ? "border-red-500/50 focus:border-red-500 focus:ring-red-500"
+                    : "border-(--border-subtle) focus:border-(--color-gardens) focus:ring-(--color-gardens)"
+                }`}
                 aria-invalid={!!errors.confirmPassword}
                 aria-describedby={
                   errors.confirmPassword ? "confirm-password-error" : undefined
@@ -260,7 +322,7 @@ const Register = () => {
               />
               <button
                 type="button"
-                className="password-toggle"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-(--text-muted) hover:text-(--text-high-emphasis) transition-colors disabled:opacity-50 p-1"
                 onClick={toggleConfirmPasswordVisibility}
                 aria-label={
                   showConfirmPassword ? "Hide password" : "Show password"
@@ -303,7 +365,7 @@ const Register = () => {
             {errors.confirmPassword && (
               <span
                 id="confirm-password-error"
-                className="error-text"
+                className="block text-sm text-red-400 mt-1"
                 role="alert"
               >
                 {errors.confirmPassword}
@@ -313,14 +375,24 @@ const Register = () => {
 
           <button
             type="submit"
-            className={`submit-btn ${isLoading ? "loading" : ""}`}
+            className="w-full mt-6 bg-(--btn-primary-bg) text-(--btn-primary-text) font-semibold py-3 px-4 rounded-lg hover:bg-(--btn-primary-hover) transition-all disabled:opacity-70 flex justify-center items-center h-[52px]"
             disabled={isLoading}
           >
-            {isLoading ? <span className="loader"></span> : "Create Account"}
+            {isLoading ? (
+              <div className="w-5 h-5 border-2 border-(--btn-primary-text) border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              "Create Account"
+            )}
           </button>
 
-          <p className="login-link">
-            Already have an account? <Link to="/login">Sign in</Link>
+          <p className="text-center text-sm text-(--text-muted) mt-6">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-(--color-gardens) hover:underline font-medium"
+            >
+              Sign in
+            </Link>
           </p>
         </form>
       </div>

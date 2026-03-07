@@ -7,10 +7,14 @@ const Navbar = ({ user, handleLogout }) => {
   return (
     <nav className="w-full bg-[var(--bg-surface)] border-b border-[var(--border-subtle)] px-6 py-3 sticky top-0 z-50 shadow-sm">
       <div className=" mx-auto flex items-center justify-between">
-        {/* Brand */}
-        <div className="text-2xl font-bold cursor-pointer text-[var(--text-high-emphasis)] tracking-tight">
-          Kibun
+
+        <div className="flex items-center gap-2 cursor-pointer">
+          <img src="/logo.png" alt="Kibun Logo" className="w-8 h-8 object-contain" />
+          <h1 className="text-3xl font-bold text-(--text-high-emphasis)">
+            Kibun
+          </h1>
         </div>
+
 
         {/* Right Actions */}
         <div className="flex items-center gap-4 sm:gap-6">

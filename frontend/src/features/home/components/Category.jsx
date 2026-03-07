@@ -26,7 +26,7 @@ const Category = ({
     <div className="w-full flex flex-col gap-10 py-6">
       {/* Category Selection Area */}
       <div className="flex flex-col gap-4">
-        <h3 className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest font-[var(--font-family-base)]">
+        <h3 className="text-xs font-semibold text-(--text-muted) uppercase tracking-widest">
           Select Category
         </h3>
 
