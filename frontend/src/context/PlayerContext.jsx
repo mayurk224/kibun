@@ -167,6 +167,17 @@ export const PlayerProvider = ({ children }) => {
     }
   };
 
+  const resetPlayer = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+    setCurrentSong(null);
+    setIsPlaying(false);
+    setProgress(0);
+    setPlaylist([]);
+  };
+
   return (
     <PlayerContext.Provider
       value={{
@@ -183,6 +194,7 @@ export const PlayerProvider = ({ children }) => {
         seek,
         playlist,
         setPlaylist,
+        resetPlayer,
       }}
     >
       {children}

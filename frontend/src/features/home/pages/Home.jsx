@@ -8,11 +8,18 @@ import FaceExpression from "../../faceDetect/components/FaceExpression";
 import Sidebar from "../components/Sidebar";
 import Footer from "../components/Footer";
 import Category from "../components/Category";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const { user, handleLogout, isLoading: isAuthLoading, errors } = useAuth();
+  const navigate = useNavigate();
+  const {
+    user,
+    handleLogout: authLogout,
+    isLoading: isAuthLoading,
+    errors,
+  } = useAuth();
   const { musicList, isFetchingMusic, handleGetAllMusic } = useHome();
-  const { currentSong, progress } = usePlayer();
+  const { currentSong, progress, resetPlayer } = usePlayer();
   const {
     lyrics,
     activeLine,
@@ -28,6 +35,41 @@ const Home = () => {
   useEffect(() => {
     localStorage.setItem("activeCategory", activeCategory);
   }, [activeCategory]);
+
+  const handleComprehensiveLogout = async () => {
+    // 1. Revoke Camera Access
+    document.querySelectorAll("video").forEach((video) => {
+      if (video.srcObject) {
+        const stream = video.srcObject;
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
+        video.srcObject = null;
+      }
+    });
+
+    // 2. Stop Audio Playback
+    if (resetPlayer) {
+      resetPlayer();
+    }
+
+    // 3. Clear Intervals/Timeouts
+    const highestId = window.setTimeout(() => {}, 0);
+    for (let i = 0; i <= highestId; i++) {
+      window.clearTimeout(i);
+      window.clearInterval(i);
+    }
+
+    // 4. Clear Session Data
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // 5. Reset Global State
+    setActiveCategory("all");
+    await authLogout();
+
+    // 6. Redirect
+    navigate("/login", { replace: true });
+  };
   const lyricsContainerRef = useRef(null);
   const activeLineRef = useRef(null);
 
@@ -63,7 +105,7 @@ const Home = () => {
     <div className="w-full h-screen flex flex-col overflow-hidden bg-[var(--bg-app)] text-[var(--text-high-emphasis)]">
       {/* 1. Navbar stays pinned to the top */}
       <div className="shrink-0 relative z-50">
-        <Navbar user={user} handleLogout={handleLogout} />
+        <Navbar user={user} handleLogout={handleComprehensiveLogout} />
       </div>
 
       {/* 2. Flex-1 takes up all remaining vertical space under the Navbar */}
