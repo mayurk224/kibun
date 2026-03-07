@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import UploadModal from "./UploadModal";
+import { LogOut } from "lucide-react";
 const Navbar = ({ user, handleLogout }) => {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
 
   return (
-    <nav className="w-full bg-[#1f1f1f] border-b border-[#3f3f46] px-6 py-3 sticky top-0 z-50 shadow-sm">
+    <nav className="w-full bg-[var(--bg-surface)] border-b border-[var(--border-subtle)] px-6 py-3 sticky top-0 z-50 shadow-sm">
       <div className=" mx-auto flex items-center justify-between">
         {/* Brand */}
-        <div className="text-2xl font-bold cursor-pointer">Kibun</div>
+        <div className="text-2xl font-bold cursor-pointer text-[var(--text-high-emphasis)] tracking-tight">
+          Kibun
+        </div>
 
         {/* Right Actions */}
         <div className="flex items-center gap-4 sm:gap-6">
           <div className="relative">
             <button
               onClick={() => setIsUploadOpen(!isUploadOpen)}
-              className="flex items-center gap-2 px-4 py-2 bg-[#6366f1] hover:bg-[#4f46e5] text-white text-sm font-medium rounded-md transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#6366f1]/50 focus:ring-offset-2 focus:ring-offset-[#1f1f1f]"
+              className="flex items-center gap-2 px-4 py-2 bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] text-[var(--btn-primary-text)] text-sm font-medium rounded-[4px] transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--btn-primary-bg)]/50 focus:ring-offset-2 focus:ring-offset-[var(--bg-surface)]"
             >
               <svg
                 className="w-4 h-4"
@@ -39,24 +42,24 @@ const Navbar = ({ user, handleLogout }) => {
             />
           </div>
 
-          <div className="flex items-center pl-4 sm:pl-6 border-l border-[#3f3f46]">
+          <div className="flex items-center pl-4 sm:pl-6 border-l border-[var(--border-subtle)]">
             <div className="flex items-center mr-2 sm:mr-4 cursor-pointer group">
               <div className="relative mr-0 sm:mr-3">
                 <img
                   src={
                     user?.avatar ||
-                    `https://ui-avatars.com/api/?name=${user?.username || "User"}&background=2e2e2e&color=fff`
+                    `https://ui-avatars.com/api/?name=${user?.username || "User"}&background=0B1122&color=F1F1F1`
                   }
                   alt={user?.username}
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-transparent group-hover:border-[#6366f1] transition-all"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-transparent group-hover:border-[var(--btn-primary-bg)] transition-all"
                 />
-                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#22c55e] border-2 border-[#1f1f1f] rounded-full"></div>
+                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[var(--btn-primary-bg)] border-2 border-[var(--bg-surface)] rounded-[4px]"></div>
               </div>
               <div className="hidden sm:flex flex-col">
-                <div className="text-sm font-semibold text-[#ffffff] leading-tight group-hover:text-[#6366f1] transition-colors">
+                <div className="text-sm font-semibold text-[var(--text-high-emphasis)] leading-tight group-hover:text-[var(--btn-primary-bg)] transition-colors">
                   {user?.username || "Guest"}
                 </div>
-                <div className="text-xs text-[#a1a1aa] leading-tight mt-0.5 max-w-[120px] truncate">
+                <div className="text-xs text-[var(--text-muted)] leading-tight mt-0.5 max-w-[120px] truncate">
                   {user?.email || "guest@example.com"}
                 </div>
               </div>
@@ -64,23 +67,10 @@ const Navbar = ({ user, handleLogout }) => {
 
             <button
               onClick={handleLogout}
-              className="p-2 text-[#a1a1aa] hover:text-[#ef4444] hover:bg-[#ef4444]/10 rounded-md transition-all focus:outline-none"
+              className="p-2 text-[var(--text-muted)] hover:text-[var(--text-high-emphasis)] hover:bg-[var(--bg-surface)] rounded-[4px] transition-all focus:outline-none"
               title="Logout"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
+              <LogOut className="h-5 w-5" />
             </button>
           </div>
         </div>

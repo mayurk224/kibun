@@ -48,17 +48,19 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-[var(--bg-app)] text-[var(--text-high-emphasis)] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading...</p>
+          <div className="w-16 h-16 border-4 border-[var(--btn-primary-bg)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[var(--text-high-emphasis)] text-lg font-medium">
+            Loading...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden bg-[#1f1f1f] text-white">
+    <div className="w-full h-screen flex flex-col overflow-hidden bg-[var(--bg-app)] text-[var(--text-high-emphasis)]">
       {/* 1. Navbar stays pinned to the top */}
       <div className="shrink-0">
         <Navbar user={user} handleLogout={handleLogout} />
@@ -87,19 +89,19 @@ const Home = () => {
             {/* Used gap-6 instead of manual widths for better responsive behavior */}
             <section className="flex flex-col md:flex-row items-center justify-between w-full mb-5 gap-6 h-[249px]">
               <div
-                className="flex-1 bg-cover bg-center h-full p-5 rounded-2xl relative shadow-lg"
+                className="flex-1 bg-cover bg-center h-full p-5 rounded-[4px] relative shadow-none"
                 style={{
                   // Added a gradient overlay directly to the style to ensure text is always readable
                   backgroundImage: currentSong?.posterUrl
-                    ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(15, 15, 15, 0.9) 100%), url('${currentSong.posterUrl}')`
-                    : "linear-gradient(to bottom, #1f2937, #111827)",
+                    ? `linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(18, 17, 19, 0.9) 100%), url('${currentSong.posterUrl}')`
+                    : "linear-gradient(to bottom, var(--bg-app), var(--bg-surface))",
                 }}
               >
-                <p className="text-sm font-semibold uppercase tracking-wider text-gray-300 drop-shadow-md">
+                <p className="text-sm font-semibold uppercase tracking-wider drop-shadow-none">
                   Now Playing
                 </p>
-                {/* Added text-white, line-clamp, and drop-shadow for better legibility */}
-                <h1 className="text-lg font-bold mt-1 text-white drop-shadow-lg line-clamp-1">
+                {/* Added text-[var(--text-high-emphasis)], line-clamp, and drop-shadow for better legibility */}
+                <h1 className="text-lg font-bold mt-1 drop-shadow-none line-clamp-1">
                   {currentSong
                     ? `${currentSong.title} - ${currentSong.artist}`
                     : "No song selected"}
@@ -117,17 +119,17 @@ const Home = () => {
                   }}
                 >
                   {lyricsLoading && (
-                    <p className="text-gray-400 mt-auto mb-auto text-center animate-pulse">
+                    <p className="text-[var(--text-muted)] mt-auto mb-auto text-center animate-pulse">
                       Loading lyrics...
                     </p>
                   )}
                   {lyricsError && (
-                    <p className="text-red-400 mt-auto mb-auto text-center">
+                    <p className="text-red-500 mt-auto mb-auto text-center">
                       {lyricsError}
                     </p>
                   )}
                   {!lyricsLoading && !lyricsError && lyrics.length === 0 && (
-                    <p className="text-gray-400 mt-auto mb-auto text-center italic">
+                    <p className="text-[var(--text-muted)] mt-auto mb-auto text-center italic">
                       No lyrics available
                     </p>
                   )}
@@ -142,8 +144,8 @@ const Home = () => {
                           // Enhanced the active state transition with slight scaling and opacity changes
                           className={`transition-all duration-300 mt-2 ${
                             isActive
-                              ? "text-2xl font-bold text-white active drop-shadow-md scale-100 opacity-100"
-                              : "text-xl font-medium text-gray-400 scale-95 opacity-50 hover:opacity-75 cursor-default"
+                              ? "text-2xl font-bold text-[var(--text-high-emphasis)] active drop-shadow-none scale-100 opacity-100"
+                              : "text-xl font-medium text-[var(--text-muted)] scale-95 opacity-50 hover:opacity-75 cursor-default"
                           }`}
                         >
                           {line.text}
