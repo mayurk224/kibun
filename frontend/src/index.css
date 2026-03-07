@@ -1,5 +1,48 @@
 @import "tailwindcss";
 
+/* Import a modern, geometric font to match the tech vibe, like Space Grotesk or keep Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* --- Base Color Tokens --- */
+  --color-gardens: #C1E45C;
+  --color-night: #0B1122;
+  --color-day: #F1F1F1;
+
+  /* --- Typography Tokens --- */
+  --font-family-base: 'Inter', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+
+  /* --- Functional Tokens: Dark Theme --- */
+  /* Backgrounds */
+  --bg-app: var(--color-night);
+  /* Using a low-opacity 'Day' for elevated surfaces (cards, menus) to keep the layout distinct */
+  --bg-surface: rgba(241, 241, 241, 0.05); 
+  
+  /* Text */
+  --text-high-emphasis: var(--color-day);
+  --text-muted: rgba(241, 241, 241, 0.6);
+  
+  /* Actions (Buttons, Active States) */
+  --btn-primary-bg: var(--color-gardens);
+  --btn-primary-text: var(--color-night); /* Dark text on the lime button for maximum contrast */
+  --btn-primary-hover: #A8CC45; /* Slightly darker lime for hover states */
+  
+  /* Borders & Dividers */
+  --border-subtle: rgba(241, 241, 241, 0.1);
+  --border-accent: rgba(193, 228, 92, 0.3); /* Subtle green glow for active card borders */
+}
+
+/* --- Base Body Application --- */
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--bg-app);
+  color: var(--text-high-emphasis);
+  -webkit-font-smoothing: antialiased;
+}
+
 @keyframes gradient-shift {
   0%, 100% {
     background-position: 0% 50%;
