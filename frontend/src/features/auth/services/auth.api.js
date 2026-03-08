@@ -8,7 +8,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   console.log(
     `[API Request] ${config.method.toUpperCase()} ${config.url}`,
-    config.data
+    config.data,
   );
   return config;
 });
@@ -17,7 +17,7 @@ api.interceptors.response.use(
   (response) => {
     console.log(
       `[API Response] ${response.status} ${response.config.url}`,
-      response.data
+      response.data,
     );
     return response;
   },
@@ -33,16 +33,16 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       console.log(`[Auto Retry] Retrying request ${originalRequest.url}...`);
       return new Promise((resolve) =>
-        setTimeout(() => resolve(api(originalRequest)), 1000)
+        setTimeout(() => resolve(api(originalRequest)), 1000),
       );
     }
 
     console.error(
       `[API Error] ${error.response?.status} ${error.config?.url}`,
-      error.response?.data || error.message
+      error.response?.data || error.message,
     );
     return Promise.reject(error);
-  }
+  },
 );
 
 export async function register({ email, password, username }) {
@@ -88,33 +88,6 @@ export async function logout() {
     return response.data;
   } catch (error) {
     console.error("Logout failed:", error);
-    throw error;
-  }
-}
-
-export async function verifyEmail({ token }) {
-  try {
-    // Add _retry config to prevent interceptor from retrying, as the component handles retry logic
-    const response = await api.post(
-      "/auth/verify-email",
-      { token },
-      { _retry: true }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Verify email failed:", error);
-    throw error;
-  }
-}
-
-export async function resendVerifyEmail({ identifier }) {
-  try {
-    const response = await api.post("/auth/resend-verify-email", {
-      identifier,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Resend verify email failed:", error);
     throw error;
   }
 }

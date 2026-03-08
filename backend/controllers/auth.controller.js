@@ -1,14 +1,6 @@
 const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
-const verifyEmailModel = require("../models/verifyEmail.model");
-const sendEmail = require("../services/email.service");
 const jwt = require("jsonwebtoken");
-const {
-  welcomeTemplate,
-  resendVerifyEmailTemplate,
-} = require("../utils/emailTemplate");
-const blacklistModel = require("../models/blacklist.model");
 const redis = require("../config/cache");
 
 async function signUpController(req, res) {
@@ -49,36 +41,12 @@ async function signUpController(req, res) {
       username,
       email,
       password: hashPassword,
-    });
-
-    const verifyToken = crypto.randomBytes(32).toString("hex");
-
-    const hashVerifyToken = crypto
-      .createHash("sha256")
-      .update(verifyToken)
-      .digest("hex");
-
-    await verifyEmailModel.create({
-      userId: user._id,
-      token: hashVerifyToken,
-      expiredAt: Date.now() + 24 * 60 * 60 * 1000,
-    });
-
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verifyToken}`;
-
-    console.log(`Sending verification email to: ${email}`);
-    console.log(`Verification URL: ${verifyUrl}`);
-
-    await sendEmail({
-      to: email,
-      subject: "Welcome to Kibun",
-      html: welcomeTemplate(user.username, verifyUrl),
+      userVerified: true,
     });
 
     return res.status(201).json({
       success: true,
-      message:
-        "sign up successfully. Please Check your email to verify account",
+      message: "sign up successfully",
       user: {
         username,
         email,
@@ -99,134 +67,6 @@ async function signUpController(req, res) {
       });
     }
     console.error(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-}
-
-async function verifyEmailController(req, res) {
-  try {
-    const { token } = req.body || {};
-    console.log("Received verification request with token:", token);
-
-    if (!token || typeof token !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "Token is required and must be a string",
-      });
-    }
-
-    const hashToken = crypto.createHash("sha256").update(token).digest("hex");
-    console.log("Hashed token for verification:", hashToken);
-
-    const verifyTokenRecord = await verifyEmailModel.findOne({
-      token: hashToken,
-      expiredAt: { $gt: new Date() },
-    });
-
-    if (!verifyTokenRecord) {
-      console.log("Token not found or expired");
-      return res.status(400).json({
-        success: false,
-        message: "Token is invalid or has expired",
-      });
-    }
-
-    console.log("Token found for user:", verifyTokenRecord.userId);
-    const user = await userModel.findById(verifyTokenRecord.userId).lean();
-    if (!user) {
-      console.log("User not found for token");
-      await verifyEmailModel.deleteOne({ _id: verifyTokenRecord._id });
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-
-    await Promise.all([
-      userModel.updateOne({ _id: user._id }, { userVerified: true }),
-      verifyEmailModel.deleteOne({ _id: verifyTokenRecord._id }),
-    ]);
-
-    console.log("User verified successfully:", user.email);
-    return res.status(200).json({
-      success: true,
-      message: "Email verified successfully",
-    });
-  } catch (error) {
-    console.error("verifyEmailController error:", error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal server error",
-    });
-  }
-}
-
-async function resendVerifyEmailController(req, res) {
-  try {
-    const { identifier } = req.body;
-
-    if (!identifier || typeof identifier !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "identifier must be string and required",
-      });
-    }
-
-    const userExist = await userModel
-      .findOne({ $or: [{ email: identifier }, { username: identifier }] })
-      .lean();
-
-    if (!userExist) {
-      return res.status(404).json({
-        success: false,
-        message: "user not found",
-      });
-    }
-
-    if (userExist.userVerified) {
-      return res.status(400).json({
-        success: false,
-        message: "user already verified",
-      });
-    }
-
-    await verifyEmailModel.deleteMany({
-      userId: userExist._id,
-    });
-
-    const verifyToken = crypto.randomBytes(32).toString("hex");
-
-    const hashToken = crypto
-      .createHash("sha256")
-      .update(verifyToken)
-      .digest("hex");
-
-    await verifyEmailModel.create({
-      userId: userExist._id,
-      token: hashToken,
-      expiredAt: Date.now() + 24 * 60 * 60 * 1000,
-    });
-
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verifyToken}`;
-
-    console.log(`Sending resend verification email to: ${userExist.email}`);
-    console.log(`Resend Verification URL: ${verifyUrl}`);
-
-    await sendEmail({
-      to: userExist.email,
-      subject: "New verify account url",
-      html: resendVerifyEmailTemplate(userExist.username, verifyUrl),
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Verification email sent successfully",
-    });
-  } catch (error) {
-    console.error("resendVerifyEmailController error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -313,10 +153,6 @@ async function logoutController(req, res) {
       });
     }
 
-    // await blacklistModel.create({
-    //   token: token,
-    // });
-
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -369,8 +205,6 @@ async function getMeController(req, res) {
 
 module.exports = {
   signUpController,
-  verifyEmailController,
-  resendVerifyEmailController,
   signInController,
   logoutController,
   getMeController,

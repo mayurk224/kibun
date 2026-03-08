@@ -1,8 +1,6 @@
 const express = require("express");
 const {
   signUpController,
-  verifyEmailController,
-  resendVerifyEmailController,
   signInController,
   logoutController,
   getMeController,
@@ -12,8 +10,6 @@ const { authUser } = require("../middlewares/auth.middleware");
 const authRoute = express.Router();
 
 authRoute.post("/sign-up", signUpController);
-authRoute.post("/verify-email", verifyEmailController);
-authRoute.post("/resend-verify-email", resendVerifyEmailController);
 authRoute.post("/sign-in", signInController);
 authRoute.post("/logout", logoutController);
 authRoute.get("/get-me", authUser, getMeController);

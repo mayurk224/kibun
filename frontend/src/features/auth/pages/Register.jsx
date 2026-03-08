@@ -128,9 +128,7 @@ const Register = () => {
               <h1 className="text-3xl font-bold text-(--text-high-emphasis) mb-4 tracking-tight">
                 Registration Successful!
               </h1>
-              <p className="text-(--text-muted) px-4">
-                Please check your email to verify your account.
-              </p>
+              <p className="text-(--text-muted) px-4">You can now login</p>
               <div className="mt-10">
                 <Link
                   to="/login"

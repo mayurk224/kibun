@@ -1,13 +1,6 @@
 import { useContext, useCallback } from "react";
 import { AuthContext } from "../auth.context";
-import {
-  register,
-  login,
-  logout,
-  getCurrentUser,
-  verifyEmail,
-  resendVerifyEmail,
-} from "../services/auth.api";
+import { register, login, logout, getCurrentUser } from "../services/auth.api";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -29,18 +22,19 @@ export const useAuth = () => {
         setErrors({});
         await register({ email, password, username });
         setIsLoading(false);
-        // Don't set user or authenticated here, wait for email verification
         return true;
       } catch (error) {
         setIsLoading(false);
         const errData = error.response?.data;
         setErrors(
-          errData?.errors || { form: errData?.message || "Registration failed" }
+          errData?.errors || {
+            form: errData?.message || "Registration failed",
+          },
         );
         throw error;
       }
     },
-    [setIsLoading, setErrors]
+    [setIsLoading, setErrors],
   );
 
   const handleLogin = useCallback(
@@ -57,12 +51,12 @@ export const useAuth = () => {
         setIsLoading(false);
         const errData = error.response?.data;
         setErrors(
-          errData?.errors || { form: errData?.message || "Login failed" }
+          errData?.errors || { form: errData?.message || "Login failed" },
         );
         throw error;
       }
     },
-    [setIsLoading, setErrors, setUser, setIsAuthenticated]
+    [setIsLoading, setErrors, setUser, setIsAuthenticated],
   );
 
   const handleLogout = useCallback(async () => {
@@ -77,7 +71,7 @@ export const useAuth = () => {
       setIsLoading(false);
       const errData = error.response?.data;
       setErrors(
-        errData?.errors || { form: errData?.message || "Logout failed" }
+        errData?.errors || { form: errData?.message || "Logout failed" },
       );
     }
   }, [setIsLoading, setErrors, setUser, setIsAuthenticated]);
@@ -92,52 +86,8 @@ export const useAuth = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      // Don't set global errors on initial load check failure, just stay unauthenticated
-      // setErrors(error.response.data.errors);
     }
   }, [setIsLoading, setErrors, setUser, setIsAuthenticated]);
-
-  const handleVerifyEmail = useCallback(
-    async ({ token }) => {
-      try {
-        setIsLoading(true);
-        setErrors({});
-        await verifyEmail({ token });
-        setIsLoading(false);
-        return true;
-      } catch (error) {
-        setIsLoading(false);
-        const errData = error.response?.data;
-        setErrors(
-          errData?.errors || { form: errData?.message || "Verification failed" }
-        );
-        throw error;
-      }
-    },
-    [setIsLoading, setErrors]
-  );
-
-  const handleResendVerifyEmail = useCallback(
-    async ({ identifier }) => {
-      try {
-        setIsLoading(true);
-        setErrors({});
-        await resendVerifyEmail({ identifier });
-        setIsLoading(false);
-        return true;
-      } catch (error) {
-        setIsLoading(false);
-        const errData = error.response?.data;
-        setErrors(
-          errData?.errors || {
-            form: errData?.message || "Resend verification failed",
-          }
-        );
-        throw error;
-      }
-    },
-    [setIsLoading, setErrors]
-  );
 
   return {
     user,
@@ -148,7 +98,5 @@ export const useAuth = () => {
     handleLogin,
     handleLogout,
     handleGetMe,
-    handleVerifyEmail,
-    handleResendVerifyEmail,
   };
 };
