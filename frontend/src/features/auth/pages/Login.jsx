@@ -137,7 +137,7 @@ const Login = () => {
                 htmlFor="identifier"
                 className="block text-sm font-medium text-[var(--text-muted)]"
               >
-                Email
+                Email or Username
               </label>
               <input
                 type="text"
@@ -145,7 +145,7 @@ const Login = () => {
                 name="identifier"
                 value={formData.identifier}
                 onChange={handleChange}
-                placeholder="yours@example.com"
+                placeholder="Email or Username"
                 className={`w-full bg-[var(--bg-surface)] text-[var(--text-high-emphasis)] border ${errors.identifier ? "border-red-500" : "border-[var(--border-subtle)] focus:border-[var(--color-gardens)]"} rounded transition-colors px-4 py-3 outline-none placeholder:text-[var(--text-muted)] placeholder:opacity-50`}
                 disabled={isLoading}
               />
@@ -217,42 +217,6 @@ const Login = () => {
                 </span>
               )}
             </div>
-
-            {/* <div className="flex items-center justify-between mt-2">
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <div className="relative flex items-center justify-center">
-                  <input
-                    type="checkbox"
-                    name="rememberMe"
-                    checked={formData.rememberMe}
-                    onChange={handleChange}
-                    className="peer appearance-none w-4 h-4 border border-[var(--border-subtle)] rounded bg-[var(--bg-surface)] checked:bg-[var(--btn-primary-bg)] checked:border-[var(--btn-primary-bg)] transition-colors cursor-pointer"
-                    disabled={isLoading}
-                  />
-                  <svg
-                    className="absolute w-3 h-3 text-[var(--btn-primary-text)] opacity-0 peer-checked:opacity-100 pointer-events-none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </div>
-                <span className="text-sm text-[var(--text-muted)] group-hover:text-[var(--text-high-emphasis)] transition-colors">
-                  Remember me
-                </span>
-              </label>
-              <Link
-                to="/forgot-password"
-                className="text-sm text-[var(--color-gardens)] hover:text-[var(--btn-primary-hover)] transition-colors"
-              >
-                Forgot password?
-              </Link>
-            </div> */}
 
             <button
               type="submit"
