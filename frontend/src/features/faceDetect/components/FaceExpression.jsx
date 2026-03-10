@@ -136,12 +136,13 @@ const FaceExpression = ({ onExpressionDetect }) => {
         {/* Scan Action Button */}
         <button
           onClick={() => detect({ landmarkerRef, videoRef, setExpression })}
-          className="text-zinc-400 hover:text-white transition-colors duration-200 group"
+          className="text-zinc-400 hover:text-white transition-colors duration-200 group flex items-center"
           aria-label="Scan face"
         >
+          Scan
           <ScanFace
             size={18}
-            className="group-hover:scale-110 transition-transform duration-200"
+            className="ml-1 group-hover:scale-110 transition-transform duration-200"
           />
         </button>
       </div>
