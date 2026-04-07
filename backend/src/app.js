@@ -22,6 +22,10 @@ app.use(
   }),
 );
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", message: "Server is awake" });
+});
+
 app.get("/", (req, res) => {
   console.log("Welcome");
   return res.status(200).json({
