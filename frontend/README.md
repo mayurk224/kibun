@@ -1,101 +1,115 @@
-# Kibun Frontend
+<div align="center">
 
-React-based user interface for the Kibun mood music app.
+# Kibun
 
-![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![MediaPipe](https://img.shields.io/badge/MediaPipe-007ACC?style=for-the-badge&logo=google&logoColor=white)
+**Your mood. Your music. Automatically.**
+
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-7-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vite.dev)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+[![MediaPipe](https://img.shields.io/badge/MediaPipe-Tasks_Vision-FF6F00?style=flat-square&logo=google&logoColor=white)](https://developers.google.com/mediapipe)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://vercel.com)
+
+</div>
+
+---
 
 ## Overview
 
-The Kibun frontend is a modern React application built with Vite, providing a seamless user experience for mood-based music streaming. It features real-time facial expression detection using MediaPipe, an intuitive music player, user authentication flows, and a responsive design powered by TailwindCSS.
+Kibun (気分 — Japanese for *mood/feeling*) is a mood-aware music streaming application that uses your **webcam and real-time face expression detection** to automatically surface music that matches how you feel. Sign in, let the camera scan your expression, and Kibun filters the music library by your detected mood — happy, sad, neutral, or surprised — so you always have the perfect soundtrack.
+
+---
 
 ## Key Features
 
-- **Face Expression Detection**: Real-time mood detection using MediaPipe Vision API.
-- **Music Player**: Built-in audio player with playback controls.
-- **Authentication UI**: Login, registration, and email verification pages.
-- **Upload Interface**: Modal for uploading music and lyrics.
-- **Responsive Design**: Mobile-first UI with TailwindCSS.
-- **Routing**: Client-side routing with React Router.
+- 🎭 **Real-Time Mood Detection** — Uses Google MediaPipe Tasks Vision to detect facial expressions (happy, sad, neutral, surprised) from the live webcam feed and filters music accordingly.
+- 🎵 **Full-Featured Audio Player** — Persistent player context with play/pause, next/prev navigation, seek, volume control, and automatic playlist progression.
+- 🎤 **Synced Lyrics** — Fetches timed lyrics and highlights the active line in sync with the current playback position.
+- 🔐 **JWT Authentication** — Secure sign-up / sign-in flow with email verification, protected routes, and a clean persistent auth context.
+- 🗂️ **Mood-Based Browsing** — Category sidebar and filter chips that let users manually or automatically browse music by mood tag.
+- ☁️ **Vercel-Ready** — Pre-configured `vercel.json` for seamless SPA deployment.
+
+---
 
 ## Architecture & Structure
 
 ```
 frontend/
-├── public/
+├── public/                  # Static assets (logo, icons)
 ├── src/
+│   ├── main.jsx             # App entry point
+│   ├── App.jsx              # Root component (providers + router)
+│   ├── app.routes.jsx       # Route definitions (protected + public)
+│   ├── index.css            # Global design tokens & base styles
 │   ├── context/
-│   │   └── PlayerContext.jsx    # Music player state management
-│   ├── features/
-│   │   ├── auth/
-│   │   │   ├── components/
-│   │   │   │   └── ProtectedRoute.jsx
-│   │   │   ├── hooks/
-│   │   │   │   └── useAuth.js
-│   │   │   ├── pages/
-│   │   │   │   ├── Login.jsx
-│   │   │   │   ├── Register.jsx
-│   │   │   │   ├── ResendVerifyEmail.jsx
-│   │   │   │   └── VerifyEmail.jsx
-│   │   │   ├── services/
-│   │   │   │   └── auth.api.js
-│   │   │   ├── utils/
-│   │   │   │   └── validation.js
-│   │   │   └── auth.context.jsx
-│   │   ├── faceDetect/
-│   │   │   ├── components/
-│   │   │   │   └── FaceExpression.jsx
-│   │   │   └── utils/
-│   │   │   └── utils.js
-│   │   └── home/
-│   │     ├── components/
-│   │     │   ├── Category.jsx
-│   │     │   ├── CategoryCard.jsx
-│   │     │   ├── Footer.jsx
-│   │     │   ├── Navbar.jsx
-│   │     │   ├── Sidebar.jsx
-│   │     │   ├── SidebarCard.jsx
-│   │     │   └── UploadModal.jsx
-│   │     ├── hooks/
-│   │     │   └── useHome.js
-│   │     ├── pages/
-│   │     │   └── Home.jsx
-│   │     └── services/
-│   │       └── home.api.js
+│   │   └── PlayerContext.jsx   # Global audio player state
 │   ├── hooks/
-│   │   └── useLyrics.js
-│   ├── App.jsx
-│   ├── app.routes.jsx
-│   ├── index.css
-│   └── main.jsx
-├── package.json
+│   │   └── useLyrics.js        # Timed lyrics sync hook
+│   └── features/
+│       ├── auth/
+│       │   ├── auth.context.jsx
+│       │   ├── components/     # ProtectedRoute
+│       │   ├── hooks/          # useAuth
+│       │   ├── pages/          # Login.jsx, Register.jsx
+│       │   └── services/       # auth.api.js
+│       ├── faceDetect/
+│       │   ├── components/     # FaceExpression.jsx
+│       │   └── utils/          # MediaPipe init & detect helpers
+│       └── home/
+│           ├── components/     # Navbar, Sidebar, Footer, Category, …
+│           ├── hooks/          # useHome
+│           ├── pages/          # Home.jsx
+│           └── services/       # home.api.js
 ├── vite.config.js
-└── README.md
+├── vercel.json
+└── package.json
 ```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
+
+- **Node.js** v18 or later
+- A running instance of the Kibun backend API
 
 ### Installation
+
 ```bash
-cd frontend
+# Clone the repository
+git clone https://github.com/your-username/kibun.git
+cd kibun/frontend
+
+# Install dependencies
 npm install
 ```
 
 ### Running the App
+
 ```bash
-npm run dev  # Development server
-# or
-npm run build  # Build for production
-npm run preview  # Preview production build
+# Start the development server
+npm run dev
 ```
+
+The app will be available at `http://localhost:5173`.
+
+```bash
+# Build for production
+npm run build
+
+# Preview the production build locally
+npm run preview
+```
+
+---
 
 ## Environment Variables
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| VITE_API_URL | Backend API URL | http://localhost:3000 |
+Create a `.env` file in the `frontend/` directory with the following variables:
+
+| Variable        | Description                                 | Example                      |
+| --------------- | ------------------------------------------- | ---------------------------- |
+| `VITE_API_URL`  | Base URL of the Kibun backend REST API      | `http://localhost:3000`      |
+
+> **Note:** All Vite environment variables must be prefixed with `VITE_` to be exposed to the client bundle.

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import UploadModal from "./UploadModal";
+// import UploadModal from "./UploadModal";
 const Navbar = ({ user, handleLogout }) => {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
 
@@ -21,7 +21,7 @@ const Navbar = ({ user, handleLogout }) => {
 
         {/* Right Actions */}
         <div className="flex items-center gap-4 sm:gap-6">
-          <div className="relative">
+          {/* <div className="relative">
             <button
               onClick={() => setIsUploadOpen(!isUploadOpen)}
               className="flex items-center gap-2 px-4 py-2 bg-[var(--btn-primary-bg)] hover:bg-[var(--btn-primary-hover)] text-[var(--btn-primary-text)] text-sm font-semibold rounded-md transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--border-accent)] focus:ring-offset-2 focus:ring-offset-[var(--bg-app)]"
@@ -47,7 +47,7 @@ const Navbar = ({ user, handleLogout }) => {
               isOpen={isUploadOpen}
               onClose={() => setIsUploadOpen(false)}
             />
-          </div>
+          </div> */}
 
           <div className="flex items-center pl-4 sm:pl-6 border-l border-[var(--border-subtle)]">
             <div className="flex items-center mr-2 sm:mr-4 cursor-pointer group">

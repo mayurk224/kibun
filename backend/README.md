@@ -1,93 +1,103 @@
-# Kibun Backend
+# Kibun — Backend
 
-RESTful API server for the Kibun music streaming platform.
+> A mood-aware music platform API. Authenticated users can upload songs with lyrics and have playlists curated based on their detected emotional state.
 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=flat-square&logo=node.js&logoColor=white)
+![Express](https://img.shields.io/badge/Express-5.x-000000?style=flat-square&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=flat-square&logo=mongodb&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-ioredis-DC382D?style=flat-square&logo=redis&logoColor=white)
+![ImageKit](https://img.shields.io/badge/ImageKit-Cloud_Storage-009BDE?style=flat-square&logo=imagekit&logoColor=white)
+
+---
 
 ## Overview
 
-The Kibun backend is a Node.js/Express API server that handles user authentication, music management, file uploads, and integrates with MongoDB for data persistence and Redis for caching. It provides secure endpoints for the frontend, including JWT-based authentication, music streaming metadata, and media storage via ImageKit.
+Kibun's backend is a RESTful API built with **Express 5** and **MongoDB**. It powers a mood-based music experience: users register, sign in, and upload MP3 tracks along with `.lrc` lyric files. The server automatically extracts ID3 metadata (title, artist, duration, album art) from the audio, stores all assets in **ImageKit**, and tags each track with a mood. This mood metadata drives playlist recommendations on the frontend. Token invalidation on logout is handled via a **Redis** blacklist for stateless, scalable session management.
+
+---
 
 ## Key Features
 
-- **JWT Authentication**: Secure user login, registration, and session management.
-- **Music Management**: Retrieve and manage music collections with metadata extraction.
-- **File Upload**: Handle music and lyric file uploads with validation.
-- **Caching**: Redis integration for improved performance.
-- **Email Verification**: Nodemailer integration for user verification.
-- **ImageKit Integration**: Cloud storage for media files.
+- **JWT Authentication** — Secure sign-up, sign-in, and logout with HTTP-only cookies (7-day expiry). Unverified users are blocked from signing in.
+- **Token Blacklisting** — Logged-out tokens are stored in Redis, preventing reuse after logout.
+- **Mood-Tagged Music Upload** — Authenticated users upload `.mp3` + `.lrc` pairs with an associated mood label.
+- **Automatic Metadata Extraction** — The server uses `music-metadata` to extract title, artist, duration, and embedded album art from the uploaded MP3.
+- **Cloud Asset Storage** — Audio files, lyric files, and poster images are uploaded concurrently to **ImageKit**, organized by mood folder.
+- **Email Verification** — New accounts are verified via email (Brevo SMTP / Nodemailer) before login is permitted.
+
+---
 
 ## Architecture & Structure
 
 ```
 backend/
-├── config/
-│   ├── cache.js          # Redis configuration
-│   ├── database.js       # MongoDB connection
-│   └── imagekit.js       # ImageKit setup
-├── controllers/
-│   ├── auth.controller.js    # Authentication logic
-│   ├── music.controller.js   # Music retrieval
-│   └── upload.controller.js  # File upload handling
-├── middlewares/
-│   ├── auth.middleware.js    # JWT verification
-│   └── upload.middleware.js  # Multer configuration
-├── models/
-│   ├── blacklist.model.js    # Token blacklist
-│   ├── music.model.js        # Music schema
-│   └── user.model.js         # User schema
-├── routes/
-│   ├── auth.route.js     # Auth endpoints
-│   ├── music.route.js    # Music endpoints
-│   └── upload.route.js   # Upload endpoints
-├── services/
-│   └── upload.service.js # Upload processing
-├── src/
-│   └── app.js           # Express app setup
+├── server.js               # Entry point — connects DB, starts server
 ├── package.json
-├── server.js           # Entry point
-└── README.md
+├── .env                    # Environment configuration (do not commit)
+│
+├── src/
+│   └── app.js              # Express app setup, CORS, route mounting
+│
+├── config/
+│   ├── database.js         # MongoDB connection (Mongoose)
+│   ├── cache.js            # Redis client (ioredis)
+│   └── imagekit.js         # ImageKit SDK config
+│
+├── routes/
+│   ├── auth.route.js       # /api/auth
+│   ├── upload.route.js     # /api/upload
+│   └── music.route.js      # /api/music
+│
+├── controllers/
+│   ├── auth.controller.js  # signUp, signIn, logout, getMe
+│   ├── upload.controller.js
+│   └── music.controller.js
+│
+├── services/
+│   └── upload.service.js   # Concurrent ImageKit uploads
+│
+├── middlewares/
+│   ├── auth.middleware.js   # JWT verification + blacklist check
+│   └── upload.middleware.js # Multer config + request validation
+│
+└── models/
+    ├── user.model.js
+    ├── music.model.js
+    └── blacklist.model.js
 ```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- MongoDB
-- Redis
+
+- [Node.js](https://nodejs.org/) v18+
+- A running [MongoDB](https://www.mongodb.com/) instance (or Atlas URI)
+- A [Redis](https://redis.io/) instance (or Redis Cloud)
+- An [ImageKit](https://imagekit.io/) account
+- A [Brevo](https://www.brevo.com/) (formerly Sendinblue) SMTP account
 
 ### Installation
+
 ```bash
-cd backend
+# Clone the repository
+git clone <your-repo-url>
+cd kibun/backend
+
+# Install dependencies
 npm install
 ```
 
 ### Running the App
+
 ```bash
-npm run dev  # Development with nodemon
-# or
-npm start    # Production
+# Development (with hot-reload via nodemon)
+npm run dev
+
+# Production
+npm start
 ```
-
-## Environment Variables
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| PORT | Server port | 3000 |
-| MONGO_URI | MongoDB connection string | mongodb://localhost:27017/kibun |
-| REDIS_HOST | Redis host | localhost |
-| REDIS_PORT | Redis port | 6379 |
-| REDIS_PASSWORD | Redis password | yourpassword |
-| JWT_SECRET | JWT secret key | yourjwtsecret |
-| IMAGEKIT_PUBLIC_KEY | ImageKit public key | yourpublickey |
-| IMAGEKIT_PRIVATE_KEY | ImageKit private key | yourprivatekey |
-| IMAGEKIT_URL_ENDPOINT | ImageKit URL endpoint | https://ik.imagekit.io/yourid |
-| NODE_ENV | Environment | development |
-| FRONTEND_URL | Frontend URL | http://localhost:5173 |
 
 The server will start on `http://localhost:3000` by default.
 

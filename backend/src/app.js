@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoute);
-app.use("/api/upload", uploadRoute);
+// app.use("/api/upload", uploadRoute);
 app.use("/api/music", musicRoute);
 
 module.exports = app;
